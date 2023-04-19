@@ -72,6 +72,48 @@ func (fu *FormUpdate) ClearUpdateAt() *FormUpdate {
 	return fu
 }
 
+// SetIsRelease sets the "is_release" field.
+func (fu *FormUpdate) SetIsRelease(i int) *FormUpdate {
+	fu.mutation.ResetIsRelease()
+	fu.mutation.SetIsRelease(i)
+	return fu
+}
+
+// SetNillableIsRelease sets the "is_release" field if the given value is not nil.
+func (fu *FormUpdate) SetNillableIsRelease(i *int) *FormUpdate {
+	if i != nil {
+		fu.SetIsRelease(*i)
+	}
+	return fu
+}
+
+// AddIsRelease adds i to the "is_release" field.
+func (fu *FormUpdate) AddIsRelease(i int) *FormUpdate {
+	fu.mutation.AddIsRelease(i)
+	return fu
+}
+
+// SetDisabled sets the "disabled" field.
+func (fu *FormUpdate) SetDisabled(i int) *FormUpdate {
+	fu.mutation.ResetDisabled()
+	fu.mutation.SetDisabled(i)
+	return fu
+}
+
+// SetNillableDisabled sets the "disabled" field if the given value is not nil.
+func (fu *FormUpdate) SetNillableDisabled(i *int) *FormUpdate {
+	if i != nil {
+		fu.SetDisabled(*i)
+	}
+	return fu
+}
+
+// AddDisabled adds i to the "disabled" field.
+func (fu *FormUpdate) AddDisabled(i int) *FormUpdate {
+	fu.mutation.AddDisabled(i)
+	return fu
+}
+
 // Mutation returns the FormMutation object of the builder.
 func (fu *FormUpdate) Mutation() *FormMutation {
 	return fu.mutation
@@ -130,6 +172,18 @@ func (fu *FormUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if fu.mutation.UpdateAtCleared() {
 		_spec.ClearField(form.FieldUpdateAt, field.TypeTime)
+	}
+	if value, ok := fu.mutation.IsRelease(); ok {
+		_spec.SetField(form.FieldIsRelease, field.TypeInt, value)
+	}
+	if value, ok := fu.mutation.AddedIsRelease(); ok {
+		_spec.AddField(form.FieldIsRelease, field.TypeInt, value)
+	}
+	if value, ok := fu.mutation.Disabled(); ok {
+		_spec.SetField(form.FieldDisabled, field.TypeInt, value)
+	}
+	if value, ok := fu.mutation.AddedDisabled(); ok {
+		_spec.AddField(form.FieldDisabled, field.TypeInt, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, fu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -192,6 +246,48 @@ func (fuo *FormUpdateOne) SetNillableUpdateAt(t *time.Time) *FormUpdateOne {
 // ClearUpdateAt clears the value of the "update_at" field.
 func (fuo *FormUpdateOne) ClearUpdateAt() *FormUpdateOne {
 	fuo.mutation.ClearUpdateAt()
+	return fuo
+}
+
+// SetIsRelease sets the "is_release" field.
+func (fuo *FormUpdateOne) SetIsRelease(i int) *FormUpdateOne {
+	fuo.mutation.ResetIsRelease()
+	fuo.mutation.SetIsRelease(i)
+	return fuo
+}
+
+// SetNillableIsRelease sets the "is_release" field if the given value is not nil.
+func (fuo *FormUpdateOne) SetNillableIsRelease(i *int) *FormUpdateOne {
+	if i != nil {
+		fuo.SetIsRelease(*i)
+	}
+	return fuo
+}
+
+// AddIsRelease adds i to the "is_release" field.
+func (fuo *FormUpdateOne) AddIsRelease(i int) *FormUpdateOne {
+	fuo.mutation.AddIsRelease(i)
+	return fuo
+}
+
+// SetDisabled sets the "disabled" field.
+func (fuo *FormUpdateOne) SetDisabled(i int) *FormUpdateOne {
+	fuo.mutation.ResetDisabled()
+	fuo.mutation.SetDisabled(i)
+	return fuo
+}
+
+// SetNillableDisabled sets the "disabled" field if the given value is not nil.
+func (fuo *FormUpdateOne) SetNillableDisabled(i *int) *FormUpdateOne {
+	if i != nil {
+		fuo.SetDisabled(*i)
+	}
+	return fuo
+}
+
+// AddDisabled adds i to the "disabled" field.
+func (fuo *FormUpdateOne) AddDisabled(i int) *FormUpdateOne {
+	fuo.mutation.AddDisabled(i)
 	return fuo
 }
 
@@ -283,6 +379,18 @@ func (fuo *FormUpdateOne) sqlSave(ctx context.Context) (_node *Form, err error) 
 	}
 	if fuo.mutation.UpdateAtCleared() {
 		_spec.ClearField(form.FieldUpdateAt, field.TypeTime)
+	}
+	if value, ok := fuo.mutation.IsRelease(); ok {
+		_spec.SetField(form.FieldIsRelease, field.TypeInt, value)
+	}
+	if value, ok := fuo.mutation.AddedIsRelease(); ok {
+		_spec.AddField(form.FieldIsRelease, field.TypeInt, value)
+	}
+	if value, ok := fuo.mutation.Disabled(); ok {
+		_spec.SetField(form.FieldDisabled, field.TypeInt, value)
+	}
+	if value, ok := fuo.mutation.AddedDisabled(); ok {
+		_spec.AddField(form.FieldDisabled, field.TypeInt, value)
 	}
 	_node = &Form{config: fuo.config}
 	_spec.Assign = _node.assignValues

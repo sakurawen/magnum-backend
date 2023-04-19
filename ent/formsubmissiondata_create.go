@@ -44,6 +44,20 @@ func (fsdc *FormSubmissionDataCreate) SetCreateAt(t time.Time) *FormSubmissionDa
 	return fsdc
 }
 
+// SetIsDeleted sets the "is_deleted" field.
+func (fsdc *FormSubmissionDataCreate) SetIsDeleted(i int) *FormSubmissionDataCreate {
+	fsdc.mutation.SetIsDeleted(i)
+	return fsdc
+}
+
+// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
+func (fsdc *FormSubmissionDataCreate) SetNillableIsDeleted(i *int) *FormSubmissionDataCreate {
+	if i != nil {
+		fsdc.SetIsDeleted(*i)
+	}
+	return fsdc
+}
+
 // SetID sets the "id" field.
 func (fsdc *FormSubmissionDataCreate) SetID(s string) *FormSubmissionDataCreate {
 	fsdc.mutation.SetID(s)
@@ -93,6 +107,10 @@ func (fsdc *FormSubmissionDataCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (fsdc *FormSubmissionDataCreate) defaults() {
+	if _, ok := fsdc.mutation.IsDeleted(); !ok {
+		v := formsubmissiondata.DefaultIsDeleted
+		fsdc.mutation.SetIsDeleted(v)
+	}
 	if _, ok := fsdc.mutation.ID(); !ok {
 		v := formsubmissiondata.DefaultID()
 		fsdc.mutation.SetID(v)
@@ -112,6 +130,9 @@ func (fsdc *FormSubmissionDataCreate) check() error {
 	}
 	if _, ok := fsdc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "FormSubmissionData.create_at"`)}
+	}
+	if _, ok := fsdc.mutation.IsDeleted(); !ok {
+		return &ValidationError{Name: "is_deleted", err: errors.New(`ent: missing required field "FormSubmissionData.is_deleted"`)}
 	}
 	return nil
 }
@@ -163,6 +184,10 @@ func (fsdc *FormSubmissionDataCreate) createSpec() (*FormSubmissionData, *sqlgra
 	if value, ok := fsdc.mutation.CreateAt(); ok {
 		_spec.SetField(formsubmissiondata.FieldCreateAt, field.TypeTime, value)
 		_node.CreateAt = value
+	}
+	if value, ok := fsdc.mutation.IsDeleted(); ok {
+		_spec.SetField(formsubmissiondata.FieldIsDeleted, field.TypeInt, value)
+		_node.IsDeleted = value
 	}
 	return _node, _spec
 }

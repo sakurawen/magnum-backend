@@ -79,6 +79,16 @@ func UpdateAt(v time.Time) predicate.Form {
 	return predicate.Form(sql.FieldEQ(FieldUpdateAt, v))
 }
 
+// IsRelease applies equality check predicate on the "is_release" field. It's identical to IsReleaseEQ.
+func IsRelease(v int) predicate.Form {
+	return predicate.Form(sql.FieldEQ(FieldIsRelease, v))
+}
+
+// Disabled applies equality check predicate on the "disabled" field. It's identical to DisabledEQ.
+func Disabled(v int) predicate.Form {
+	return predicate.Form(sql.FieldEQ(FieldDisabled, v))
+}
+
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v string) predicate.Form {
 	return predicate.Form(sql.FieldEQ(FieldUserID, v))
@@ -362,6 +372,86 @@ func UpdateAtIsNil() predicate.Form {
 // UpdateAtNotNil applies the NotNil predicate on the "update_at" field.
 func UpdateAtNotNil() predicate.Form {
 	return predicate.Form(sql.FieldNotNull(FieldUpdateAt))
+}
+
+// IsReleaseEQ applies the EQ predicate on the "is_release" field.
+func IsReleaseEQ(v int) predicate.Form {
+	return predicate.Form(sql.FieldEQ(FieldIsRelease, v))
+}
+
+// IsReleaseNEQ applies the NEQ predicate on the "is_release" field.
+func IsReleaseNEQ(v int) predicate.Form {
+	return predicate.Form(sql.FieldNEQ(FieldIsRelease, v))
+}
+
+// IsReleaseIn applies the In predicate on the "is_release" field.
+func IsReleaseIn(vs ...int) predicate.Form {
+	return predicate.Form(sql.FieldIn(FieldIsRelease, vs...))
+}
+
+// IsReleaseNotIn applies the NotIn predicate on the "is_release" field.
+func IsReleaseNotIn(vs ...int) predicate.Form {
+	return predicate.Form(sql.FieldNotIn(FieldIsRelease, vs...))
+}
+
+// IsReleaseGT applies the GT predicate on the "is_release" field.
+func IsReleaseGT(v int) predicate.Form {
+	return predicate.Form(sql.FieldGT(FieldIsRelease, v))
+}
+
+// IsReleaseGTE applies the GTE predicate on the "is_release" field.
+func IsReleaseGTE(v int) predicate.Form {
+	return predicate.Form(sql.FieldGTE(FieldIsRelease, v))
+}
+
+// IsReleaseLT applies the LT predicate on the "is_release" field.
+func IsReleaseLT(v int) predicate.Form {
+	return predicate.Form(sql.FieldLT(FieldIsRelease, v))
+}
+
+// IsReleaseLTE applies the LTE predicate on the "is_release" field.
+func IsReleaseLTE(v int) predicate.Form {
+	return predicate.Form(sql.FieldLTE(FieldIsRelease, v))
+}
+
+// DisabledEQ applies the EQ predicate on the "disabled" field.
+func DisabledEQ(v int) predicate.Form {
+	return predicate.Form(sql.FieldEQ(FieldDisabled, v))
+}
+
+// DisabledNEQ applies the NEQ predicate on the "disabled" field.
+func DisabledNEQ(v int) predicate.Form {
+	return predicate.Form(sql.FieldNEQ(FieldDisabled, v))
+}
+
+// DisabledIn applies the In predicate on the "disabled" field.
+func DisabledIn(vs ...int) predicate.Form {
+	return predicate.Form(sql.FieldIn(FieldDisabled, vs...))
+}
+
+// DisabledNotIn applies the NotIn predicate on the "disabled" field.
+func DisabledNotIn(vs ...int) predicate.Form {
+	return predicate.Form(sql.FieldNotIn(FieldDisabled, vs...))
+}
+
+// DisabledGT applies the GT predicate on the "disabled" field.
+func DisabledGT(v int) predicate.Form {
+	return predicate.Form(sql.FieldGT(FieldDisabled, v))
+}
+
+// DisabledGTE applies the GTE predicate on the "disabled" field.
+func DisabledGTE(v int) predicate.Form {
+	return predicate.Form(sql.FieldGTE(FieldDisabled, v))
+}
+
+// DisabledLT applies the LT predicate on the "disabled" field.
+func DisabledLT(v int) predicate.Form {
+	return predicate.Form(sql.FieldLT(FieldDisabled, v))
+}
+
+// DisabledLTE applies the LTE predicate on the "disabled" field.
+func DisabledLTE(v int) predicate.Form {
+	return predicate.Form(sql.FieldLTE(FieldDisabled, v))
 }
 
 // And groups predicates with the AND operator between them.

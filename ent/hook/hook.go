@@ -32,6 +32,18 @@ func (f FormFieldFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, e
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FormFieldMutation", m)
 }
 
+// The FormFieldConfigFunc type is an adapter to allow the use of ordinary
+// function as FormFieldConfig mutator.
+type FormFieldConfigFunc func(context.Context, *ent.FormFieldConfigMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f FormFieldConfigFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.FormFieldConfigMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.FormFieldConfigMutation", m)
+}
+
 // The FormSubmissionFunc type is an adapter to allow the use of ordinary
 // function as FormSubmission mutator.
 type FormSubmissionFunc func(context.Context, *ent.FormSubmissionMutation) (ent.Value, error)

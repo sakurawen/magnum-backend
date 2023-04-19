@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"magnum/ent/form"
 	"magnum/ent/formfield"
+	"magnum/ent/formfieldconfig"
 	"magnum/ent/formsubmission"
 	"magnum/ent/formsubmissiondata"
 	"magnum/ent/predicate"
@@ -30,6 +31,7 @@ const (
 	// Node types.
 	TypeForm               = "Form"
 	TypeFormField          = "FormField"
+	TypeFormFieldConfig    = "FormFieldConfig"
 	TypeFormSubmission     = "FormSubmission"
 	TypeFormSubmissionData = "FormSubmissionData"
 	TypeUser               = "User"
@@ -46,6 +48,10 @@ type FormMutation struct {
 	description   *string
 	create_at     *time.Time
 	update_at     *time.Time
+	is_release    *int
+	addis_release *int
+	disabled      *int
+	adddisabled   *int
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Form, error)
@@ -349,6 +355,118 @@ func (m *FormMutation) ResetUpdateAt() {
 	delete(m.clearedFields, form.FieldUpdateAt)
 }
 
+// SetIsRelease sets the "is_release" field.
+func (m *FormMutation) SetIsRelease(i int) {
+	m.is_release = &i
+	m.addis_release = nil
+}
+
+// IsRelease returns the value of the "is_release" field in the mutation.
+func (m *FormMutation) IsRelease() (r int, exists bool) {
+	v := m.is_release
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsRelease returns the old "is_release" field's value of the Form entity.
+// If the Form object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormMutation) OldIsRelease(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsRelease is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsRelease requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsRelease: %w", err)
+	}
+	return oldValue.IsRelease, nil
+}
+
+// AddIsRelease adds i to the "is_release" field.
+func (m *FormMutation) AddIsRelease(i int) {
+	if m.addis_release != nil {
+		*m.addis_release += i
+	} else {
+		m.addis_release = &i
+	}
+}
+
+// AddedIsRelease returns the value that was added to the "is_release" field in this mutation.
+func (m *FormMutation) AddedIsRelease() (r int, exists bool) {
+	v := m.addis_release
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetIsRelease resets all changes to the "is_release" field.
+func (m *FormMutation) ResetIsRelease() {
+	m.is_release = nil
+	m.addis_release = nil
+}
+
+// SetDisabled sets the "disabled" field.
+func (m *FormMutation) SetDisabled(i int) {
+	m.disabled = &i
+	m.adddisabled = nil
+}
+
+// Disabled returns the value of the "disabled" field in the mutation.
+func (m *FormMutation) Disabled() (r int, exists bool) {
+	v := m.disabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisabled returns the old "disabled" field's value of the Form entity.
+// If the Form object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormMutation) OldDisabled(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisabled: %w", err)
+	}
+	return oldValue.Disabled, nil
+}
+
+// AddDisabled adds i to the "disabled" field.
+func (m *FormMutation) AddDisabled(i int) {
+	if m.adddisabled != nil {
+		*m.adddisabled += i
+	} else {
+		m.adddisabled = &i
+	}
+}
+
+// AddedDisabled returns the value that was added to the "disabled" field in this mutation.
+func (m *FormMutation) AddedDisabled() (r int, exists bool) {
+	v := m.adddisabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisabled resets all changes to the "disabled" field.
+func (m *FormMutation) ResetDisabled() {
+	m.disabled = nil
+	m.adddisabled = nil
+}
+
 // Where appends a list predicates to the FormMutation builder.
 func (m *FormMutation) Where(ps ...predicate.Form) {
 	m.predicates = append(m.predicates, ps...)
@@ -383,7 +501,7 @@ func (m *FormMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FormMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 7)
 	if m.user_id != nil {
 		fields = append(fields, form.FieldUserID)
 	}
@@ -398,6 +516,12 @@ func (m *FormMutation) Fields() []string {
 	}
 	if m.update_at != nil {
 		fields = append(fields, form.FieldUpdateAt)
+	}
+	if m.is_release != nil {
+		fields = append(fields, form.FieldIsRelease)
+	}
+	if m.disabled != nil {
+		fields = append(fields, form.FieldDisabled)
 	}
 	return fields
 }
@@ -417,6 +541,10 @@ func (m *FormMutation) Field(name string) (ent.Value, bool) {
 		return m.CreateAt()
 	case form.FieldUpdateAt:
 		return m.UpdateAt()
+	case form.FieldIsRelease:
+		return m.IsRelease()
+	case form.FieldDisabled:
+		return m.Disabled()
 	}
 	return nil, false
 }
@@ -436,6 +564,10 @@ func (m *FormMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldCreateAt(ctx)
 	case form.FieldUpdateAt:
 		return m.OldUpdateAt(ctx)
+	case form.FieldIsRelease:
+		return m.OldIsRelease(ctx)
+	case form.FieldDisabled:
+		return m.OldDisabled(ctx)
 	}
 	return nil, fmt.Errorf("unknown Form field %s", name)
 }
@@ -480,6 +612,20 @@ func (m *FormMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUpdateAt(v)
 		return nil
+	case form.FieldIsRelease:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsRelease(v)
+		return nil
+	case form.FieldDisabled:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisabled(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Form field %s", name)
 }
@@ -487,13 +633,26 @@ func (m *FormMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *FormMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addis_release != nil {
+		fields = append(fields, form.FieldIsRelease)
+	}
+	if m.adddisabled != nil {
+		fields = append(fields, form.FieldDisabled)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *FormMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case form.FieldIsRelease:
+		return m.AddedIsRelease()
+	case form.FieldDisabled:
+		return m.AddedDisabled()
+	}
 	return nil, false
 }
 
@@ -502,6 +661,20 @@ func (m *FormMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *FormMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case form.FieldIsRelease:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIsRelease(v)
+		return nil
+	case form.FieldDisabled:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisabled(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Form numeric field %s", name)
 }
@@ -552,6 +725,12 @@ func (m *FormMutation) ResetField(name string) error {
 		return nil
 	case form.FieldUpdateAt:
 		m.ResetUpdateAt()
+		return nil
+	case form.FieldIsRelease:
+		m.ResetIsRelease()
+		return nil
+	case form.FieldDisabled:
+		m.ResetDisabled()
 		return nil
 	}
 	return fmt.Errorf("unknown Form field %s", name)
@@ -613,16 +792,13 @@ type FormFieldMutation struct {
 	id             *string
 	form_id        *string
 	field_type     *string
-	field_label    *string
-	filed_name     *string
-	is_required    *int
-	addis_required *int
+	field_name     *string
 	order_index    *int
 	addorder_index *int
 	create_at      *time.Time
 	update_at      *time.Time
-	options        *string
-	placeholder    *string
+	disabled       *int
+	adddisabled    *int
 	clearedFields  map[string]struct{}
 	done           bool
 	oldValue       func(context.Context) (*FormField, error)
@@ -805,132 +981,40 @@ func (m *FormFieldMutation) ResetFieldType() {
 	m.field_type = nil
 }
 
-// SetFieldLabel sets the "field_label" field.
-func (m *FormFieldMutation) SetFieldLabel(s string) {
-	m.field_label = &s
+// SetFieldName sets the "field_name" field.
+func (m *FormFieldMutation) SetFieldName(s string) {
+	m.field_name = &s
 }
 
-// FieldLabel returns the value of the "field_label" field in the mutation.
-func (m *FormFieldMutation) FieldLabel() (r string, exists bool) {
-	v := m.field_label
+// FieldName returns the value of the "field_name" field in the mutation.
+func (m *FormFieldMutation) FieldName() (r string, exists bool) {
+	v := m.field_name
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldFieldLabel returns the old "field_label" field's value of the FormField entity.
+// OldFieldName returns the old "field_name" field's value of the FormField entity.
 // If the FormField object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FormFieldMutation) OldFieldLabel(ctx context.Context) (v string, err error) {
+func (m *FormFieldMutation) OldFieldName(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFieldLabel is only allowed on UpdateOne operations")
+		return v, errors.New("OldFieldName is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFieldLabel requires an ID field in the mutation")
+		return v, errors.New("OldFieldName requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFieldLabel: %w", err)
+		return v, fmt.Errorf("querying old value for OldFieldName: %w", err)
 	}
-	return oldValue.FieldLabel, nil
+	return oldValue.FieldName, nil
 }
 
-// ResetFieldLabel resets all changes to the "field_label" field.
-func (m *FormFieldMutation) ResetFieldLabel() {
-	m.field_label = nil
-}
-
-// SetFiledName sets the "filed_name" field.
-func (m *FormFieldMutation) SetFiledName(s string) {
-	m.filed_name = &s
-}
-
-// FiledName returns the value of the "filed_name" field in the mutation.
-func (m *FormFieldMutation) FiledName() (r string, exists bool) {
-	v := m.filed_name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldFiledName returns the old "filed_name" field's value of the FormField entity.
-// If the FormField object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FormFieldMutation) OldFiledName(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFiledName is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFiledName requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFiledName: %w", err)
-	}
-	return oldValue.FiledName, nil
-}
-
-// ResetFiledName resets all changes to the "filed_name" field.
-func (m *FormFieldMutation) ResetFiledName() {
-	m.filed_name = nil
-}
-
-// SetIsRequired sets the "is_required" field.
-func (m *FormFieldMutation) SetIsRequired(i int) {
-	m.is_required = &i
-	m.addis_required = nil
-}
-
-// IsRequired returns the value of the "is_required" field in the mutation.
-func (m *FormFieldMutation) IsRequired() (r int, exists bool) {
-	v := m.is_required
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIsRequired returns the old "is_required" field's value of the FormField entity.
-// If the FormField object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FormFieldMutation) OldIsRequired(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIsRequired is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIsRequired requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIsRequired: %w", err)
-	}
-	return oldValue.IsRequired, nil
-}
-
-// AddIsRequired adds i to the "is_required" field.
-func (m *FormFieldMutation) AddIsRequired(i int) {
-	if m.addis_required != nil {
-		*m.addis_required += i
-	} else {
-		m.addis_required = &i
-	}
-}
-
-// AddedIsRequired returns the value that was added to the "is_required" field in this mutation.
-func (m *FormFieldMutation) AddedIsRequired() (r int, exists bool) {
-	v := m.addis_required
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetIsRequired resets all changes to the "is_required" field.
-func (m *FormFieldMutation) ResetIsRequired() {
-	m.is_required = nil
-	m.addis_required = nil
+// ResetFieldName resets all changes to the "field_name" field.
+func (m *FormFieldMutation) ResetFieldName() {
+	m.field_name = nil
 }
 
 // SetOrderIndex sets the "order_index" field.
@@ -983,10 +1067,24 @@ func (m *FormFieldMutation) AddedOrderIndex() (r int, exists bool) {
 	return *v, true
 }
 
+// ClearOrderIndex clears the value of the "order_index" field.
+func (m *FormFieldMutation) ClearOrderIndex() {
+	m.order_index = nil
+	m.addorder_index = nil
+	m.clearedFields[formfield.FieldOrderIndex] = struct{}{}
+}
+
+// OrderIndexCleared returns if the "order_index" field was cleared in this mutation.
+func (m *FormFieldMutation) OrderIndexCleared() bool {
+	_, ok := m.clearedFields[formfield.FieldOrderIndex]
+	return ok
+}
+
 // ResetOrderIndex resets all changes to the "order_index" field.
 func (m *FormFieldMutation) ResetOrderIndex() {
 	m.order_index = nil
 	m.addorder_index = nil
+	delete(m.clearedFields, formfield.FieldOrderIndex)
 }
 
 // SetCreateAt sets the "create_at" field.
@@ -1074,102 +1172,60 @@ func (m *FormFieldMutation) ResetUpdateAt() {
 	delete(m.clearedFields, formfield.FieldUpdateAt)
 }
 
-// SetOptions sets the "options" field.
-func (m *FormFieldMutation) SetOptions(s string) {
-	m.options = &s
+// SetDisabled sets the "disabled" field.
+func (m *FormFieldMutation) SetDisabled(i int) {
+	m.disabled = &i
+	m.adddisabled = nil
 }
 
-// Options returns the value of the "options" field in the mutation.
-func (m *FormFieldMutation) Options() (r string, exists bool) {
-	v := m.options
+// Disabled returns the value of the "disabled" field in the mutation.
+func (m *FormFieldMutation) Disabled() (r int, exists bool) {
+	v := m.disabled
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldOptions returns the old "options" field's value of the FormField entity.
+// OldDisabled returns the old "disabled" field's value of the FormField entity.
 // If the FormField object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FormFieldMutation) OldOptions(ctx context.Context) (v string, err error) {
+func (m *FormFieldMutation) OldDisabled(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldOptions is only allowed on UpdateOne operations")
+		return v, errors.New("OldDisabled is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldOptions requires an ID field in the mutation")
+		return v, errors.New("OldDisabled requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldOptions: %w", err)
+		return v, fmt.Errorf("querying old value for OldDisabled: %w", err)
 	}
-	return oldValue.Options, nil
+	return oldValue.Disabled, nil
 }
 
-// ClearOptions clears the value of the "options" field.
-func (m *FormFieldMutation) ClearOptions() {
-	m.options = nil
-	m.clearedFields[formfield.FieldOptions] = struct{}{}
+// AddDisabled adds i to the "disabled" field.
+func (m *FormFieldMutation) AddDisabled(i int) {
+	if m.adddisabled != nil {
+		*m.adddisabled += i
+	} else {
+		m.adddisabled = &i
+	}
 }
 
-// OptionsCleared returns if the "options" field was cleared in this mutation.
-func (m *FormFieldMutation) OptionsCleared() bool {
-	_, ok := m.clearedFields[formfield.FieldOptions]
-	return ok
-}
-
-// ResetOptions resets all changes to the "options" field.
-func (m *FormFieldMutation) ResetOptions() {
-	m.options = nil
-	delete(m.clearedFields, formfield.FieldOptions)
-}
-
-// SetPlaceholder sets the "placeholder" field.
-func (m *FormFieldMutation) SetPlaceholder(s string) {
-	m.placeholder = &s
-}
-
-// Placeholder returns the value of the "placeholder" field in the mutation.
-func (m *FormFieldMutation) Placeholder() (r string, exists bool) {
-	v := m.placeholder
+// AddedDisabled returns the value that was added to the "disabled" field in this mutation.
+func (m *FormFieldMutation) AddedDisabled() (r int, exists bool) {
+	v := m.adddisabled
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPlaceholder returns the old "placeholder" field's value of the FormField entity.
-// If the FormField object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FormFieldMutation) OldPlaceholder(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPlaceholder is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPlaceholder requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPlaceholder: %w", err)
-	}
-	return oldValue.Placeholder, nil
-}
-
-// ClearPlaceholder clears the value of the "placeholder" field.
-func (m *FormFieldMutation) ClearPlaceholder() {
-	m.placeholder = nil
-	m.clearedFields[formfield.FieldPlaceholder] = struct{}{}
-}
-
-// PlaceholderCleared returns if the "placeholder" field was cleared in this mutation.
-func (m *FormFieldMutation) PlaceholderCleared() bool {
-	_, ok := m.clearedFields[formfield.FieldPlaceholder]
-	return ok
-}
-
-// ResetPlaceholder resets all changes to the "placeholder" field.
-func (m *FormFieldMutation) ResetPlaceholder() {
-	m.placeholder = nil
-	delete(m.clearedFields, formfield.FieldPlaceholder)
+// ResetDisabled resets all changes to the "disabled" field.
+func (m *FormFieldMutation) ResetDisabled() {
+	m.disabled = nil
+	m.adddisabled = nil
 }
 
 // Where appends a list predicates to the FormFieldMutation builder.
@@ -1206,21 +1262,15 @@ func (m *FormFieldMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FormFieldMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 7)
 	if m.form_id != nil {
 		fields = append(fields, formfield.FieldFormID)
 	}
 	if m.field_type != nil {
 		fields = append(fields, formfield.FieldFieldType)
 	}
-	if m.field_label != nil {
-		fields = append(fields, formfield.FieldFieldLabel)
-	}
-	if m.filed_name != nil {
-		fields = append(fields, formfield.FieldFiledName)
-	}
-	if m.is_required != nil {
-		fields = append(fields, formfield.FieldIsRequired)
+	if m.field_name != nil {
+		fields = append(fields, formfield.FieldFieldName)
 	}
 	if m.order_index != nil {
 		fields = append(fields, formfield.FieldOrderIndex)
@@ -1231,11 +1281,8 @@ func (m *FormFieldMutation) Fields() []string {
 	if m.update_at != nil {
 		fields = append(fields, formfield.FieldUpdateAt)
 	}
-	if m.options != nil {
-		fields = append(fields, formfield.FieldOptions)
-	}
-	if m.placeholder != nil {
-		fields = append(fields, formfield.FieldPlaceholder)
+	if m.disabled != nil {
+		fields = append(fields, formfield.FieldDisabled)
 	}
 	return fields
 }
@@ -1249,22 +1296,16 @@ func (m *FormFieldMutation) Field(name string) (ent.Value, bool) {
 		return m.FormID()
 	case formfield.FieldFieldType:
 		return m.FieldType()
-	case formfield.FieldFieldLabel:
-		return m.FieldLabel()
-	case formfield.FieldFiledName:
-		return m.FiledName()
-	case formfield.FieldIsRequired:
-		return m.IsRequired()
+	case formfield.FieldFieldName:
+		return m.FieldName()
 	case formfield.FieldOrderIndex:
 		return m.OrderIndex()
 	case formfield.FieldCreateAt:
 		return m.CreateAt()
 	case formfield.FieldUpdateAt:
 		return m.UpdateAt()
-	case formfield.FieldOptions:
-		return m.Options()
-	case formfield.FieldPlaceholder:
-		return m.Placeholder()
+	case formfield.FieldDisabled:
+		return m.Disabled()
 	}
 	return nil, false
 }
@@ -1278,22 +1319,16 @@ func (m *FormFieldMutation) OldField(ctx context.Context, name string) (ent.Valu
 		return m.OldFormID(ctx)
 	case formfield.FieldFieldType:
 		return m.OldFieldType(ctx)
-	case formfield.FieldFieldLabel:
-		return m.OldFieldLabel(ctx)
-	case formfield.FieldFiledName:
-		return m.OldFiledName(ctx)
-	case formfield.FieldIsRequired:
-		return m.OldIsRequired(ctx)
+	case formfield.FieldFieldName:
+		return m.OldFieldName(ctx)
 	case formfield.FieldOrderIndex:
 		return m.OldOrderIndex(ctx)
 	case formfield.FieldCreateAt:
 		return m.OldCreateAt(ctx)
 	case formfield.FieldUpdateAt:
 		return m.OldUpdateAt(ctx)
-	case formfield.FieldOptions:
-		return m.OldOptions(ctx)
-	case formfield.FieldPlaceholder:
-		return m.OldPlaceholder(ctx)
+	case formfield.FieldDisabled:
+		return m.OldDisabled(ctx)
 	}
 	return nil, fmt.Errorf("unknown FormField field %s", name)
 }
@@ -1317,26 +1352,12 @@ func (m *FormFieldMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetFieldType(v)
 		return nil
-	case formfield.FieldFieldLabel:
+	case formfield.FieldFieldName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetFieldLabel(v)
-		return nil
-	case formfield.FieldFiledName:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetFiledName(v)
-		return nil
-	case formfield.FieldIsRequired:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetIsRequired(v)
+		m.SetFieldName(v)
 		return nil
 	case formfield.FieldOrderIndex:
 		v, ok := value.(int)
@@ -1359,19 +1380,12 @@ func (m *FormFieldMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUpdateAt(v)
 		return nil
-	case formfield.FieldOptions:
-		v, ok := value.(string)
+	case formfield.FieldDisabled:
+		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetOptions(v)
-		return nil
-	case formfield.FieldPlaceholder:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPlaceholder(v)
+		m.SetDisabled(v)
 		return nil
 	}
 	return fmt.Errorf("unknown FormField field %s", name)
@@ -1381,11 +1395,11 @@ func (m *FormFieldMutation) SetField(name string, value ent.Value) error {
 // this mutation.
 func (m *FormFieldMutation) AddedFields() []string {
 	var fields []string
-	if m.addis_required != nil {
-		fields = append(fields, formfield.FieldIsRequired)
-	}
 	if m.addorder_index != nil {
 		fields = append(fields, formfield.FieldOrderIndex)
+	}
+	if m.adddisabled != nil {
+		fields = append(fields, formfield.FieldDisabled)
 	}
 	return fields
 }
@@ -1395,10 +1409,10 @@ func (m *FormFieldMutation) AddedFields() []string {
 // was not set, or was not defined in the schema.
 func (m *FormFieldMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case formfield.FieldIsRequired:
-		return m.AddedIsRequired()
 	case formfield.FieldOrderIndex:
 		return m.AddedOrderIndex()
+	case formfield.FieldDisabled:
+		return m.AddedDisabled()
 	}
 	return nil, false
 }
@@ -1408,19 +1422,19 @@ func (m *FormFieldMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *FormFieldMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case formfield.FieldIsRequired:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddIsRequired(v)
-		return nil
 	case formfield.FieldOrderIndex:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddOrderIndex(v)
+		return nil
+	case formfield.FieldDisabled:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisabled(v)
 		return nil
 	}
 	return fmt.Errorf("unknown FormField numeric field %s", name)
@@ -1430,14 +1444,11 @@ func (m *FormFieldMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *FormFieldMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(formfield.FieldOrderIndex) {
+		fields = append(fields, formfield.FieldOrderIndex)
+	}
 	if m.FieldCleared(formfield.FieldUpdateAt) {
 		fields = append(fields, formfield.FieldUpdateAt)
-	}
-	if m.FieldCleared(formfield.FieldOptions) {
-		fields = append(fields, formfield.FieldOptions)
-	}
-	if m.FieldCleared(formfield.FieldPlaceholder) {
-		fields = append(fields, formfield.FieldPlaceholder)
 	}
 	return fields
 }
@@ -1453,14 +1464,11 @@ func (m *FormFieldMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *FormFieldMutation) ClearField(name string) error {
 	switch name {
+	case formfield.FieldOrderIndex:
+		m.ClearOrderIndex()
+		return nil
 	case formfield.FieldUpdateAt:
 		m.ClearUpdateAt()
-		return nil
-	case formfield.FieldOptions:
-		m.ClearOptions()
-		return nil
-	case formfield.FieldPlaceholder:
-		m.ClearPlaceholder()
 		return nil
 	}
 	return fmt.Errorf("unknown FormField nullable field %s", name)
@@ -1476,14 +1484,8 @@ func (m *FormFieldMutation) ResetField(name string) error {
 	case formfield.FieldFieldType:
 		m.ResetFieldType()
 		return nil
-	case formfield.FieldFieldLabel:
-		m.ResetFieldLabel()
-		return nil
-	case formfield.FieldFiledName:
-		m.ResetFiledName()
-		return nil
-	case formfield.FieldIsRequired:
-		m.ResetIsRequired()
+	case formfield.FieldFieldName:
+		m.ResetFieldName()
 		return nil
 	case formfield.FieldOrderIndex:
 		m.ResetOrderIndex()
@@ -1494,11 +1496,8 @@ func (m *FormFieldMutation) ResetField(name string) error {
 	case formfield.FieldUpdateAt:
 		m.ResetUpdateAt()
 		return nil
-	case formfield.FieldOptions:
-		m.ResetOptions()
-		return nil
-	case formfield.FieldPlaceholder:
-		m.ResetPlaceholder()
+	case formfield.FieldDisabled:
+		m.ResetDisabled()
 		return nil
 	}
 	return fmt.Errorf("unknown FormField field %s", name)
@@ -1552,6 +1551,861 @@ func (m *FormFieldMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown FormField edge %s", name)
 }
 
+// FormFieldConfigMutation represents an operation that mutates the FormFieldConfig nodes in the graph.
+type FormFieldConfigMutation struct {
+	config
+	op                Op
+	typ               string
+	id                *string
+	field_id          *string
+	form_id           *string
+	key               *string
+	_type             *string
+	value             *string
+	json_string_value *string
+	text              *string
+	order_index       *int
+	addorder_index    *int
+	disabled          *int
+	adddisabled       *int
+	clearedFields     map[string]struct{}
+	done              bool
+	oldValue          func(context.Context) (*FormFieldConfig, error)
+	predicates        []predicate.FormFieldConfig
+}
+
+var _ ent.Mutation = (*FormFieldConfigMutation)(nil)
+
+// formfieldconfigOption allows management of the mutation configuration using functional options.
+type formfieldconfigOption func(*FormFieldConfigMutation)
+
+// newFormFieldConfigMutation creates new mutation for the FormFieldConfig entity.
+func newFormFieldConfigMutation(c config, op Op, opts ...formfieldconfigOption) *FormFieldConfigMutation {
+	m := &FormFieldConfigMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeFormFieldConfig,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withFormFieldConfigID sets the ID field of the mutation.
+func withFormFieldConfigID(id string) formfieldconfigOption {
+	return func(m *FormFieldConfigMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *FormFieldConfig
+		)
+		m.oldValue = func(ctx context.Context) (*FormFieldConfig, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().FormFieldConfig.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withFormFieldConfig sets the old FormFieldConfig of the mutation.
+func withFormFieldConfig(node *FormFieldConfig) formfieldconfigOption {
+	return func(m *FormFieldConfigMutation) {
+		m.oldValue = func(context.Context) (*FormFieldConfig, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m FormFieldConfigMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m FormFieldConfigMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of FormFieldConfig entities.
+func (m *FormFieldConfigMutation) SetID(id string) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *FormFieldConfigMutation) ID() (id string, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *FormFieldConfigMutation) IDs(ctx context.Context) ([]string, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []string{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().FormFieldConfig.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetFieldID sets the "field_id" field.
+func (m *FormFieldConfigMutation) SetFieldID(s string) {
+	m.field_id = &s
+}
+
+// FieldID returns the value of the "field_id" field in the mutation.
+func (m *FormFieldConfigMutation) FieldID() (r string, exists bool) {
+	v := m.field_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFieldID returns the old "field_id" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldFieldID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFieldID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFieldID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFieldID: %w", err)
+	}
+	return oldValue.FieldID, nil
+}
+
+// ResetFieldID resets all changes to the "field_id" field.
+func (m *FormFieldConfigMutation) ResetFieldID() {
+	m.field_id = nil
+}
+
+// SetFormID sets the "form_id" field.
+func (m *FormFieldConfigMutation) SetFormID(s string) {
+	m.form_id = &s
+}
+
+// FormID returns the value of the "form_id" field in the mutation.
+func (m *FormFieldConfigMutation) FormID() (r string, exists bool) {
+	v := m.form_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFormID returns the old "form_id" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldFormID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFormID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFormID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFormID: %w", err)
+	}
+	return oldValue.FormID, nil
+}
+
+// ResetFormID resets all changes to the "form_id" field.
+func (m *FormFieldConfigMutation) ResetFormID() {
+	m.form_id = nil
+}
+
+// SetKey sets the "key" field.
+func (m *FormFieldConfigMutation) SetKey(s string) {
+	m.key = &s
+}
+
+// Key returns the value of the "key" field in the mutation.
+func (m *FormFieldConfigMutation) Key() (r string, exists bool) {
+	v := m.key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldKey returns the old "key" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldKey(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldKey: %w", err)
+	}
+	return oldValue.Key, nil
+}
+
+// ResetKey resets all changes to the "key" field.
+func (m *FormFieldConfigMutation) ResetKey() {
+	m.key = nil
+}
+
+// SetType sets the "type" field.
+func (m *FormFieldConfigMutation) SetType(s string) {
+	m._type = &s
+}
+
+// GetType returns the value of the "type" field in the mutation.
+func (m *FormFieldConfigMutation) GetType() (r string, exists bool) {
+	v := m._type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldType returns the old "type" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldType: %w", err)
+	}
+	return oldValue.Type, nil
+}
+
+// ResetType resets all changes to the "type" field.
+func (m *FormFieldConfigMutation) ResetType() {
+	m._type = nil
+}
+
+// SetValue sets the "value" field.
+func (m *FormFieldConfigMutation) SetValue(s string) {
+	m.value = &s
+}
+
+// Value returns the value of the "value" field in the mutation.
+func (m *FormFieldConfigMutation) Value() (r string, exists bool) {
+	v := m.value
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldValue returns the old "value" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldValue(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldValue: %w", err)
+	}
+	return oldValue.Value, nil
+}
+
+// ResetValue resets all changes to the "value" field.
+func (m *FormFieldConfigMutation) ResetValue() {
+	m.value = nil
+}
+
+// SetJSONStringValue sets the "json_string_value" field.
+func (m *FormFieldConfigMutation) SetJSONStringValue(s string) {
+	m.json_string_value = &s
+}
+
+// JSONStringValue returns the value of the "json_string_value" field in the mutation.
+func (m *FormFieldConfigMutation) JSONStringValue() (r string, exists bool) {
+	v := m.json_string_value
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldJSONStringValue returns the old "json_string_value" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldJSONStringValue(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldJSONStringValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldJSONStringValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldJSONStringValue: %w", err)
+	}
+	return oldValue.JSONStringValue, nil
+}
+
+// ClearJSONStringValue clears the value of the "json_string_value" field.
+func (m *FormFieldConfigMutation) ClearJSONStringValue() {
+	m.json_string_value = nil
+	m.clearedFields[formfieldconfig.FieldJSONStringValue] = struct{}{}
+}
+
+// JSONStringValueCleared returns if the "json_string_value" field was cleared in this mutation.
+func (m *FormFieldConfigMutation) JSONStringValueCleared() bool {
+	_, ok := m.clearedFields[formfieldconfig.FieldJSONStringValue]
+	return ok
+}
+
+// ResetJSONStringValue resets all changes to the "json_string_value" field.
+func (m *FormFieldConfigMutation) ResetJSONStringValue() {
+	m.json_string_value = nil
+	delete(m.clearedFields, formfieldconfig.FieldJSONStringValue)
+}
+
+// SetText sets the "text" field.
+func (m *FormFieldConfigMutation) SetText(s string) {
+	m.text = &s
+}
+
+// Text returns the value of the "text" field in the mutation.
+func (m *FormFieldConfigMutation) Text() (r string, exists bool) {
+	v := m.text
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldText returns the old "text" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldText(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldText is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldText requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldText: %w", err)
+	}
+	return oldValue.Text, nil
+}
+
+// ResetText resets all changes to the "text" field.
+func (m *FormFieldConfigMutation) ResetText() {
+	m.text = nil
+}
+
+// SetOrderIndex sets the "order_index" field.
+func (m *FormFieldConfigMutation) SetOrderIndex(i int) {
+	m.order_index = &i
+	m.addorder_index = nil
+}
+
+// OrderIndex returns the value of the "order_index" field in the mutation.
+func (m *FormFieldConfigMutation) OrderIndex() (r int, exists bool) {
+	v := m.order_index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOrderIndex returns the old "order_index" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldOrderIndex(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOrderIndex is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOrderIndex requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOrderIndex: %w", err)
+	}
+	return oldValue.OrderIndex, nil
+}
+
+// AddOrderIndex adds i to the "order_index" field.
+func (m *FormFieldConfigMutation) AddOrderIndex(i int) {
+	if m.addorder_index != nil {
+		*m.addorder_index += i
+	} else {
+		m.addorder_index = &i
+	}
+}
+
+// AddedOrderIndex returns the value that was added to the "order_index" field in this mutation.
+func (m *FormFieldConfigMutation) AddedOrderIndex() (r int, exists bool) {
+	v := m.addorder_index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetOrderIndex resets all changes to the "order_index" field.
+func (m *FormFieldConfigMutation) ResetOrderIndex() {
+	m.order_index = nil
+	m.addorder_index = nil
+}
+
+// SetDisabled sets the "disabled" field.
+func (m *FormFieldConfigMutation) SetDisabled(i int) {
+	m.disabled = &i
+	m.adddisabled = nil
+}
+
+// Disabled returns the value of the "disabled" field in the mutation.
+func (m *FormFieldConfigMutation) Disabled() (r int, exists bool) {
+	v := m.disabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisabled returns the old "disabled" field's value of the FormFieldConfig entity.
+// If the FormFieldConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormFieldConfigMutation) OldDisabled(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisabled: %w", err)
+	}
+	return oldValue.Disabled, nil
+}
+
+// AddDisabled adds i to the "disabled" field.
+func (m *FormFieldConfigMutation) AddDisabled(i int) {
+	if m.adddisabled != nil {
+		*m.adddisabled += i
+	} else {
+		m.adddisabled = &i
+	}
+}
+
+// AddedDisabled returns the value that was added to the "disabled" field in this mutation.
+func (m *FormFieldConfigMutation) AddedDisabled() (r int, exists bool) {
+	v := m.adddisabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisabled resets all changes to the "disabled" field.
+func (m *FormFieldConfigMutation) ResetDisabled() {
+	m.disabled = nil
+	m.adddisabled = nil
+}
+
+// Where appends a list predicates to the FormFieldConfigMutation builder.
+func (m *FormFieldConfigMutation) Where(ps ...predicate.FormFieldConfig) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the FormFieldConfigMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *FormFieldConfigMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.FormFieldConfig, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *FormFieldConfigMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *FormFieldConfigMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (FormFieldConfig).
+func (m *FormFieldConfigMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *FormFieldConfigMutation) Fields() []string {
+	fields := make([]string, 0, 9)
+	if m.field_id != nil {
+		fields = append(fields, formfieldconfig.FieldFieldID)
+	}
+	if m.form_id != nil {
+		fields = append(fields, formfieldconfig.FieldFormID)
+	}
+	if m.key != nil {
+		fields = append(fields, formfieldconfig.FieldKey)
+	}
+	if m._type != nil {
+		fields = append(fields, formfieldconfig.FieldType)
+	}
+	if m.value != nil {
+		fields = append(fields, formfieldconfig.FieldValue)
+	}
+	if m.json_string_value != nil {
+		fields = append(fields, formfieldconfig.FieldJSONStringValue)
+	}
+	if m.text != nil {
+		fields = append(fields, formfieldconfig.FieldText)
+	}
+	if m.order_index != nil {
+		fields = append(fields, formfieldconfig.FieldOrderIndex)
+	}
+	if m.disabled != nil {
+		fields = append(fields, formfieldconfig.FieldDisabled)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *FormFieldConfigMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case formfieldconfig.FieldFieldID:
+		return m.FieldID()
+	case formfieldconfig.FieldFormID:
+		return m.FormID()
+	case formfieldconfig.FieldKey:
+		return m.Key()
+	case formfieldconfig.FieldType:
+		return m.GetType()
+	case formfieldconfig.FieldValue:
+		return m.Value()
+	case formfieldconfig.FieldJSONStringValue:
+		return m.JSONStringValue()
+	case formfieldconfig.FieldText:
+		return m.Text()
+	case formfieldconfig.FieldOrderIndex:
+		return m.OrderIndex()
+	case formfieldconfig.FieldDisabled:
+		return m.Disabled()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *FormFieldConfigMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case formfieldconfig.FieldFieldID:
+		return m.OldFieldID(ctx)
+	case formfieldconfig.FieldFormID:
+		return m.OldFormID(ctx)
+	case formfieldconfig.FieldKey:
+		return m.OldKey(ctx)
+	case formfieldconfig.FieldType:
+		return m.OldType(ctx)
+	case formfieldconfig.FieldValue:
+		return m.OldValue(ctx)
+	case formfieldconfig.FieldJSONStringValue:
+		return m.OldJSONStringValue(ctx)
+	case formfieldconfig.FieldText:
+		return m.OldText(ctx)
+	case formfieldconfig.FieldOrderIndex:
+		return m.OldOrderIndex(ctx)
+	case formfieldconfig.FieldDisabled:
+		return m.OldDisabled(ctx)
+	}
+	return nil, fmt.Errorf("unknown FormFieldConfig field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *FormFieldConfigMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case formfieldconfig.FieldFieldID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFieldID(v)
+		return nil
+	case formfieldconfig.FieldFormID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFormID(v)
+		return nil
+	case formfieldconfig.FieldKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetKey(v)
+		return nil
+	case formfieldconfig.FieldType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetType(v)
+		return nil
+	case formfieldconfig.FieldValue:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetValue(v)
+		return nil
+	case formfieldconfig.FieldJSONStringValue:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetJSONStringValue(v)
+		return nil
+	case formfieldconfig.FieldText:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetText(v)
+		return nil
+	case formfieldconfig.FieldOrderIndex:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOrderIndex(v)
+		return nil
+	case formfieldconfig.FieldDisabled:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisabled(v)
+		return nil
+	}
+	return fmt.Errorf("unknown FormFieldConfig field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *FormFieldConfigMutation) AddedFields() []string {
+	var fields []string
+	if m.addorder_index != nil {
+		fields = append(fields, formfieldconfig.FieldOrderIndex)
+	}
+	if m.adddisabled != nil {
+		fields = append(fields, formfieldconfig.FieldDisabled)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *FormFieldConfigMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case formfieldconfig.FieldOrderIndex:
+		return m.AddedOrderIndex()
+	case formfieldconfig.FieldDisabled:
+		return m.AddedDisabled()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *FormFieldConfigMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case formfieldconfig.FieldOrderIndex:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddOrderIndex(v)
+		return nil
+	case formfieldconfig.FieldDisabled:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisabled(v)
+		return nil
+	}
+	return fmt.Errorf("unknown FormFieldConfig numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *FormFieldConfigMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(formfieldconfig.FieldJSONStringValue) {
+		fields = append(fields, formfieldconfig.FieldJSONStringValue)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *FormFieldConfigMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *FormFieldConfigMutation) ClearField(name string) error {
+	switch name {
+	case formfieldconfig.FieldJSONStringValue:
+		m.ClearJSONStringValue()
+		return nil
+	}
+	return fmt.Errorf("unknown FormFieldConfig nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *FormFieldConfigMutation) ResetField(name string) error {
+	switch name {
+	case formfieldconfig.FieldFieldID:
+		m.ResetFieldID()
+		return nil
+	case formfieldconfig.FieldFormID:
+		m.ResetFormID()
+		return nil
+	case formfieldconfig.FieldKey:
+		m.ResetKey()
+		return nil
+	case formfieldconfig.FieldType:
+		m.ResetType()
+		return nil
+	case formfieldconfig.FieldValue:
+		m.ResetValue()
+		return nil
+	case formfieldconfig.FieldJSONStringValue:
+		m.ResetJSONStringValue()
+		return nil
+	case formfieldconfig.FieldText:
+		m.ResetText()
+		return nil
+	case formfieldconfig.FieldOrderIndex:
+		m.ResetOrderIndex()
+		return nil
+	case formfieldconfig.FieldDisabled:
+		m.ResetDisabled()
+		return nil
+	}
+	return fmt.Errorf("unknown FormFieldConfig field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *FormFieldConfigMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *FormFieldConfigMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *FormFieldConfigMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *FormFieldConfigMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *FormFieldConfigMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *FormFieldConfigMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *FormFieldConfigMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown FormFieldConfig unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *FormFieldConfigMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown FormFieldConfig edge %s", name)
+}
+
 // FormSubmissionMutation represents an operation that mutates the FormSubmission nodes in the graph.
 type FormSubmissionMutation struct {
 	config
@@ -1560,7 +2414,9 @@ type FormSubmissionMutation struct {
 	id            *string
 	form_id       *string
 	user_id       *string
-	create_id     *time.Time
+	create_at     *time.Time
+	is_deleted    *int
+	addis_deleted *int
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*FormSubmission, error)
@@ -1743,40 +2599,96 @@ func (m *FormSubmissionMutation) ResetUserID() {
 	m.user_id = nil
 }
 
-// SetCreateID sets the "create_id" field.
-func (m *FormSubmissionMutation) SetCreateID(t time.Time) {
-	m.create_id = &t
+// SetCreateAt sets the "create_at" field.
+func (m *FormSubmissionMutation) SetCreateAt(t time.Time) {
+	m.create_at = &t
 }
 
-// CreateID returns the value of the "create_id" field in the mutation.
-func (m *FormSubmissionMutation) CreateID() (r time.Time, exists bool) {
-	v := m.create_id
+// CreateAt returns the value of the "create_at" field in the mutation.
+func (m *FormSubmissionMutation) CreateAt() (r time.Time, exists bool) {
+	v := m.create_at
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCreateID returns the old "create_id" field's value of the FormSubmission entity.
+// OldCreateAt returns the old "create_at" field's value of the FormSubmission entity.
 // If the FormSubmission object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *FormSubmissionMutation) OldCreateID(ctx context.Context) (v time.Time, err error) {
+func (m *FormSubmissionMutation) OldCreateAt(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCreateID is only allowed on UpdateOne operations")
+		return v, errors.New("OldCreateAt is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCreateID requires an ID field in the mutation")
+		return v, errors.New("OldCreateAt requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreateID: %w", err)
+		return v, fmt.Errorf("querying old value for OldCreateAt: %w", err)
 	}
-	return oldValue.CreateID, nil
+	return oldValue.CreateAt, nil
 }
 
-// ResetCreateID resets all changes to the "create_id" field.
-func (m *FormSubmissionMutation) ResetCreateID() {
-	m.create_id = nil
+// ResetCreateAt resets all changes to the "create_at" field.
+func (m *FormSubmissionMutation) ResetCreateAt() {
+	m.create_at = nil
+}
+
+// SetIsDeleted sets the "is_deleted" field.
+func (m *FormSubmissionMutation) SetIsDeleted(i int) {
+	m.is_deleted = &i
+	m.addis_deleted = nil
+}
+
+// IsDeleted returns the value of the "is_deleted" field in the mutation.
+func (m *FormSubmissionMutation) IsDeleted() (r int, exists bool) {
+	v := m.is_deleted
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsDeleted returns the old "is_deleted" field's value of the FormSubmission entity.
+// If the FormSubmission object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormSubmissionMutation) OldIsDeleted(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsDeleted is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsDeleted requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsDeleted: %w", err)
+	}
+	return oldValue.IsDeleted, nil
+}
+
+// AddIsDeleted adds i to the "is_deleted" field.
+func (m *FormSubmissionMutation) AddIsDeleted(i int) {
+	if m.addis_deleted != nil {
+		*m.addis_deleted += i
+	} else {
+		m.addis_deleted = &i
+	}
+}
+
+// AddedIsDeleted returns the value that was added to the "is_deleted" field in this mutation.
+func (m *FormSubmissionMutation) AddedIsDeleted() (r int, exists bool) {
+	v := m.addis_deleted
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetIsDeleted resets all changes to the "is_deleted" field.
+func (m *FormSubmissionMutation) ResetIsDeleted() {
+	m.is_deleted = nil
+	m.addis_deleted = nil
 }
 
 // Where appends a list predicates to the FormSubmissionMutation builder.
@@ -1813,15 +2725,18 @@ func (m *FormSubmissionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FormSubmissionMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.form_id != nil {
 		fields = append(fields, formsubmission.FieldFormID)
 	}
 	if m.user_id != nil {
 		fields = append(fields, formsubmission.FieldUserID)
 	}
-	if m.create_id != nil {
-		fields = append(fields, formsubmission.FieldCreateID)
+	if m.create_at != nil {
+		fields = append(fields, formsubmission.FieldCreateAt)
+	}
+	if m.is_deleted != nil {
+		fields = append(fields, formsubmission.FieldIsDeleted)
 	}
 	return fields
 }
@@ -1835,8 +2750,10 @@ func (m *FormSubmissionMutation) Field(name string) (ent.Value, bool) {
 		return m.FormID()
 	case formsubmission.FieldUserID:
 		return m.UserID()
-	case formsubmission.FieldCreateID:
-		return m.CreateID()
+	case formsubmission.FieldCreateAt:
+		return m.CreateAt()
+	case formsubmission.FieldIsDeleted:
+		return m.IsDeleted()
 	}
 	return nil, false
 }
@@ -1850,8 +2767,10 @@ func (m *FormSubmissionMutation) OldField(ctx context.Context, name string) (ent
 		return m.OldFormID(ctx)
 	case formsubmission.FieldUserID:
 		return m.OldUserID(ctx)
-	case formsubmission.FieldCreateID:
-		return m.OldCreateID(ctx)
+	case formsubmission.FieldCreateAt:
+		return m.OldCreateAt(ctx)
+	case formsubmission.FieldIsDeleted:
+		return m.OldIsDeleted(ctx)
 	}
 	return nil, fmt.Errorf("unknown FormSubmission field %s", name)
 }
@@ -1875,12 +2794,19 @@ func (m *FormSubmissionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUserID(v)
 		return nil
-	case formsubmission.FieldCreateID:
+	case formsubmission.FieldCreateAt:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCreateID(v)
+		m.SetCreateAt(v)
+		return nil
+	case formsubmission.FieldIsDeleted:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsDeleted(v)
 		return nil
 	}
 	return fmt.Errorf("unknown FormSubmission field %s", name)
@@ -1889,13 +2815,21 @@ func (m *FormSubmissionMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *FormSubmissionMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addis_deleted != nil {
+		fields = append(fields, formsubmission.FieldIsDeleted)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *FormSubmissionMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case formsubmission.FieldIsDeleted:
+		return m.AddedIsDeleted()
+	}
 	return nil, false
 }
 
@@ -1904,6 +2838,13 @@ func (m *FormSubmissionMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *FormSubmissionMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case formsubmission.FieldIsDeleted:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIsDeleted(v)
+		return nil
 	}
 	return fmt.Errorf("unknown FormSubmission numeric field %s", name)
 }
@@ -1937,8 +2878,11 @@ func (m *FormSubmissionMutation) ResetField(name string) error {
 	case formsubmission.FieldUserID:
 		m.ResetUserID()
 		return nil
-	case formsubmission.FieldCreateID:
-		m.ResetCreateID()
+	case formsubmission.FieldCreateAt:
+		m.ResetCreateAt()
+		return nil
+	case formsubmission.FieldIsDeleted:
+		m.ResetIsDeleted()
 		return nil
 	}
 	return fmt.Errorf("unknown FormSubmission field %s", name)
@@ -2002,6 +2946,8 @@ type FormSubmissionDataMutation struct {
 	field_id      *string
 	field_value   *string
 	create_at     *time.Time
+	is_deleted    *int
+	addis_deleted *int
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*FormSubmissionData, error)
@@ -2256,6 +3202,62 @@ func (m *FormSubmissionDataMutation) ResetCreateAt() {
 	m.create_at = nil
 }
 
+// SetIsDeleted sets the "is_deleted" field.
+func (m *FormSubmissionDataMutation) SetIsDeleted(i int) {
+	m.is_deleted = &i
+	m.addis_deleted = nil
+}
+
+// IsDeleted returns the value of the "is_deleted" field in the mutation.
+func (m *FormSubmissionDataMutation) IsDeleted() (r int, exists bool) {
+	v := m.is_deleted
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsDeleted returns the old "is_deleted" field's value of the FormSubmissionData entity.
+// If the FormSubmissionData object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *FormSubmissionDataMutation) OldIsDeleted(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsDeleted is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsDeleted requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsDeleted: %w", err)
+	}
+	return oldValue.IsDeleted, nil
+}
+
+// AddIsDeleted adds i to the "is_deleted" field.
+func (m *FormSubmissionDataMutation) AddIsDeleted(i int) {
+	if m.addis_deleted != nil {
+		*m.addis_deleted += i
+	} else {
+		m.addis_deleted = &i
+	}
+}
+
+// AddedIsDeleted returns the value that was added to the "is_deleted" field in this mutation.
+func (m *FormSubmissionDataMutation) AddedIsDeleted() (r int, exists bool) {
+	v := m.addis_deleted
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetIsDeleted resets all changes to the "is_deleted" field.
+func (m *FormSubmissionDataMutation) ResetIsDeleted() {
+	m.is_deleted = nil
+	m.addis_deleted = nil
+}
+
 // Where appends a list predicates to the FormSubmissionDataMutation builder.
 func (m *FormSubmissionDataMutation) Where(ps ...predicate.FormSubmissionData) {
 	m.predicates = append(m.predicates, ps...)
@@ -2290,7 +3292,7 @@ func (m *FormSubmissionDataMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *FormSubmissionDataMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.submission_id != nil {
 		fields = append(fields, formsubmissiondata.FieldSubmissionID)
 	}
@@ -2302,6 +3304,9 @@ func (m *FormSubmissionDataMutation) Fields() []string {
 	}
 	if m.create_at != nil {
 		fields = append(fields, formsubmissiondata.FieldCreateAt)
+	}
+	if m.is_deleted != nil {
+		fields = append(fields, formsubmissiondata.FieldIsDeleted)
 	}
 	return fields
 }
@@ -2319,6 +3324,8 @@ func (m *FormSubmissionDataMutation) Field(name string) (ent.Value, bool) {
 		return m.FieldValue()
 	case formsubmissiondata.FieldCreateAt:
 		return m.CreateAt()
+	case formsubmissiondata.FieldIsDeleted:
+		return m.IsDeleted()
 	}
 	return nil, false
 }
@@ -2336,6 +3343,8 @@ func (m *FormSubmissionDataMutation) OldField(ctx context.Context, name string) 
 		return m.OldFieldValue(ctx)
 	case formsubmissiondata.FieldCreateAt:
 		return m.OldCreateAt(ctx)
+	case formsubmissiondata.FieldIsDeleted:
+		return m.OldIsDeleted(ctx)
 	}
 	return nil, fmt.Errorf("unknown FormSubmissionData field %s", name)
 }
@@ -2373,6 +3382,13 @@ func (m *FormSubmissionDataMutation) SetField(name string, value ent.Value) erro
 		}
 		m.SetCreateAt(v)
 		return nil
+	case formsubmissiondata.FieldIsDeleted:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsDeleted(v)
+		return nil
 	}
 	return fmt.Errorf("unknown FormSubmissionData field %s", name)
 }
@@ -2380,13 +3396,21 @@ func (m *FormSubmissionDataMutation) SetField(name string, value ent.Value) erro
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *FormSubmissionDataMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addis_deleted != nil {
+		fields = append(fields, formsubmissiondata.FieldIsDeleted)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *FormSubmissionDataMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case formsubmissiondata.FieldIsDeleted:
+		return m.AddedIsDeleted()
+	}
 	return nil, false
 }
 
@@ -2395,6 +3419,13 @@ func (m *FormSubmissionDataMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *FormSubmissionDataMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case formsubmissiondata.FieldIsDeleted:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddIsDeleted(v)
+		return nil
 	}
 	return fmt.Errorf("unknown FormSubmissionData numeric field %s", name)
 }
@@ -2433,6 +3464,9 @@ func (m *FormSubmissionDataMutation) ResetField(name string) error {
 		return nil
 	case formsubmissiondata.FieldCreateAt:
 		m.ResetCreateAt()
+		return nil
+	case formsubmissiondata.FieldIsDeleted:
+		m.ResetIsDeleted()
 		return nil
 	}
 	return fmt.Errorf("unknown FormSubmissionData field %s", name)
@@ -2497,6 +3531,8 @@ type UserMutation struct {
 	phone         *string
 	role          *string
 	account       *string
+	disabled      *int
+	adddisabled   *int
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*User, error)
@@ -2787,6 +3823,62 @@ func (m *UserMutation) ResetAccount() {
 	m.account = nil
 }
 
+// SetDisabled sets the "disabled" field.
+func (m *UserMutation) SetDisabled(i int) {
+	m.disabled = &i
+	m.adddisabled = nil
+}
+
+// Disabled returns the value of the "disabled" field in the mutation.
+func (m *UserMutation) Disabled() (r int, exists bool) {
+	v := m.disabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisabled returns the old "disabled" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldDisabled(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisabled: %w", err)
+	}
+	return oldValue.Disabled, nil
+}
+
+// AddDisabled adds i to the "disabled" field.
+func (m *UserMutation) AddDisabled(i int) {
+	if m.adddisabled != nil {
+		*m.adddisabled += i
+	} else {
+		m.adddisabled = &i
+	}
+}
+
+// AddedDisabled returns the value that was added to the "disabled" field in this mutation.
+func (m *UserMutation) AddedDisabled() (r int, exists bool) {
+	v := m.adddisabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisabled resets all changes to the "disabled" field.
+func (m *UserMutation) ResetDisabled() {
+	m.disabled = nil
+	m.adddisabled = nil
+}
+
 // Where appends a list predicates to the UserMutation builder.
 func (m *UserMutation) Where(ps ...predicate.User) {
 	m.predicates = append(m.predicates, ps...)
@@ -2821,7 +3913,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.password != nil {
 		fields = append(fields, user.FieldPassword)
 	}
@@ -2836,6 +3928,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.account != nil {
 		fields = append(fields, user.FieldAccount)
+	}
+	if m.disabled != nil {
+		fields = append(fields, user.FieldDisabled)
 	}
 	return fields
 }
@@ -2855,6 +3950,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Role()
 	case user.FieldAccount:
 		return m.Account()
+	case user.FieldDisabled:
+		return m.Disabled()
 	}
 	return nil, false
 }
@@ -2874,6 +3971,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldRole(ctx)
 	case user.FieldAccount:
 		return m.OldAccount(ctx)
+	case user.FieldDisabled:
+		return m.OldDisabled(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -2918,6 +4017,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAccount(v)
 		return nil
+	case user.FieldDisabled:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisabled(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -2925,13 +4031,21 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *UserMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.adddisabled != nil {
+		fields = append(fields, user.FieldDisabled)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case user.FieldDisabled:
+		return m.AddedDisabled()
+	}
 	return nil, false
 }
 
@@ -2940,6 +4054,13 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case user.FieldDisabled:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisabled(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -2981,6 +4102,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldAccount:
 		m.ResetAccount()
+		return nil
+	case user.FieldDisabled:
+		m.ResetDisabled()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

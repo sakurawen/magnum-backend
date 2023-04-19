@@ -12,6 +12,9 @@ type Form func(*sql.Selector)
 // FormField is the predicate function for formfield builders.
 type FormField func(*sql.Selector)
 
+// FormFieldConfig is the predicate function for formfieldconfig builders.
+type FormFieldConfig func(*sql.Selector)
+
 // FormSubmission is the predicate function for formsubmission builders.
 type FormSubmission func(*sql.Selector)
 

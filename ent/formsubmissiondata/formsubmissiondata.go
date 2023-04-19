@@ -15,6 +15,8 @@ const (
 	FieldFieldValue = "field_value"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
+	// FieldIsDeleted holds the string denoting the is_deleted field in the database.
+	FieldIsDeleted = "is_deleted"
 	// Table holds the table name of the formsubmissiondata in the database.
 	Table = "form_submission_data"
 )
@@ -26,6 +28,7 @@ var Columns = []string{
 	FieldFieldID,
 	FieldFieldValue,
 	FieldCreateAt,
+	FieldIsDeleted,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -39,6 +42,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultIsDeleted holds the default value on creation for the "is_deleted" field.
+	DefaultIsDeleted int
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() string
 )

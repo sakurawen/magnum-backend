@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"magnum/ent/form"
 	"magnum/ent/formfield"
+	"magnum/ent/formfieldconfig"
 	"magnum/ent/formsubmission"
 	"magnum/ent/formsubmissiondata"
 	"magnum/ent/user"
@@ -71,6 +72,7 @@ func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		form.Table:               form.ValidColumn,
 		formfield.Table:          formfield.ValidColumn,
+		formfieldconfig.Table:    formfieldconfig.ValidColumn,
 		formsubmission.Table:     formsubmission.ValidColumn,
 		formsubmissiondata.Table: formsubmissiondata.ValidColumn,
 		user.Table:               user.ValidColumn,

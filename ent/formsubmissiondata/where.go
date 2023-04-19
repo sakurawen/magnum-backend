@@ -69,6 +69,11 @@ func CreateAt(v time.Time) predicate.FormSubmissionData {
 	return predicate.FormSubmissionData(sql.FieldEQ(FieldCreateAt, v))
 }
 
+// IsDeleted applies equality check predicate on the "is_deleted" field. It's identical to IsDeletedEQ.
+func IsDeleted(v int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldEQ(FieldIsDeleted, v))
+}
+
 // SubmissionIDEQ applies the EQ predicate on the "submission_id" field.
 func SubmissionIDEQ(v string) predicate.FormSubmissionData {
 	return predicate.FormSubmissionData(sql.FieldEQ(FieldSubmissionID, v))
@@ -302,6 +307,46 @@ func CreateAtLT(v time.Time) predicate.FormSubmissionData {
 // CreateAtLTE applies the LTE predicate on the "create_at" field.
 func CreateAtLTE(v time.Time) predicate.FormSubmissionData {
 	return predicate.FormSubmissionData(sql.FieldLTE(FieldCreateAt, v))
+}
+
+// IsDeletedEQ applies the EQ predicate on the "is_deleted" field.
+func IsDeletedEQ(v int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldEQ(FieldIsDeleted, v))
+}
+
+// IsDeletedNEQ applies the NEQ predicate on the "is_deleted" field.
+func IsDeletedNEQ(v int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldNEQ(FieldIsDeleted, v))
+}
+
+// IsDeletedIn applies the In predicate on the "is_deleted" field.
+func IsDeletedIn(vs ...int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldIn(FieldIsDeleted, vs...))
+}
+
+// IsDeletedNotIn applies the NotIn predicate on the "is_deleted" field.
+func IsDeletedNotIn(vs ...int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldNotIn(FieldIsDeleted, vs...))
+}
+
+// IsDeletedGT applies the GT predicate on the "is_deleted" field.
+func IsDeletedGT(v int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldGT(FieldIsDeleted, v))
+}
+
+// IsDeletedGTE applies the GTE predicate on the "is_deleted" field.
+func IsDeletedGTE(v int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldGTE(FieldIsDeleted, v))
+}
+
+// IsDeletedLT applies the LT predicate on the "is_deleted" field.
+func IsDeletedLT(v int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldLT(FieldIsDeleted, v))
+}
+
+// IsDeletedLTE applies the LTE predicate on the "is_deleted" field.
+func IsDeletedLTE(v int) predicate.FormSubmissionData {
+	return predicate.FormSubmissionData(sql.FieldLTE(FieldIsDeleted, v))
 }
 
 // And groups predicates with the AND operator between them.

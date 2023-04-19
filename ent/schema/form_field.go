@@ -10,21 +10,19 @@ import (
 // 表单字段
 type FormField struct {
 	ent.Schema
+	OrderIndex int `json:"order_index"`
 }
 
 func (FormField) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").DefaultFunc(uuid.New().String).Unique(),
+		field.String("id").DefaultFunc(uuid.NewString).Unique(),
 		field.String("form_id").Comment("字段对应的表单id"),
 		field.String("field_type").Comment("字段类型"),
-		field.String("field_label").Comment("字段标签"),
-		field.String("filed_name").Comment("字段名称"),
-		field.Int("is_required").Comment("是否必填 1是0否").Default(0),
-		field.Int("order_index").Comment("排序字段"),
+		field.String("field_name").Comment("字段名称"),
+		field.Int("order_index").Comment("排序字段").StructTag(`json:"order_index"`).Optional(),
 		field.Time("create_at"),
 		field.Time("update_at").Optional(),
-		field.String("options").Optional().Comment("存放选项"),
-		field.String("placeholder").Optional(),
+		field.Int("disabled").Comment("是否禁用").Default(0).StructTag(`json:"disabled"`),
 	}
 }
 

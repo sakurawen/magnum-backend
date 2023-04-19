@@ -64,9 +64,14 @@ func UserID(v string) predicate.FormSubmission {
 	return predicate.FormSubmission(sql.FieldEQ(FieldUserID, v))
 }
 
-// CreateID applies equality check predicate on the "create_id" field. It's identical to CreateIDEQ.
-func CreateID(v time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldEQ(FieldCreateID, v))
+// CreateAt applies equality check predicate on the "create_at" field. It's identical to CreateAtEQ.
+func CreateAt(v time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldEQ(FieldCreateAt, v))
+}
+
+// IsDeleted applies equality check predicate on the "is_deleted" field. It's identical to IsDeletedEQ.
+func IsDeleted(v int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldEQ(FieldIsDeleted, v))
 }
 
 // FormIDEQ applies the EQ predicate on the "form_id" field.
@@ -199,44 +204,84 @@ func UserIDContainsFold(v string) predicate.FormSubmission {
 	return predicate.FormSubmission(sql.FieldContainsFold(FieldUserID, v))
 }
 
-// CreateIDEQ applies the EQ predicate on the "create_id" field.
-func CreateIDEQ(v time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldEQ(FieldCreateID, v))
+// CreateAtEQ applies the EQ predicate on the "create_at" field.
+func CreateAtEQ(v time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldEQ(FieldCreateAt, v))
 }
 
-// CreateIDNEQ applies the NEQ predicate on the "create_id" field.
-func CreateIDNEQ(v time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldNEQ(FieldCreateID, v))
+// CreateAtNEQ applies the NEQ predicate on the "create_at" field.
+func CreateAtNEQ(v time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldNEQ(FieldCreateAt, v))
 }
 
-// CreateIDIn applies the In predicate on the "create_id" field.
-func CreateIDIn(vs ...time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldIn(FieldCreateID, vs...))
+// CreateAtIn applies the In predicate on the "create_at" field.
+func CreateAtIn(vs ...time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldIn(FieldCreateAt, vs...))
 }
 
-// CreateIDNotIn applies the NotIn predicate on the "create_id" field.
-func CreateIDNotIn(vs ...time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldNotIn(FieldCreateID, vs...))
+// CreateAtNotIn applies the NotIn predicate on the "create_at" field.
+func CreateAtNotIn(vs ...time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldNotIn(FieldCreateAt, vs...))
 }
 
-// CreateIDGT applies the GT predicate on the "create_id" field.
-func CreateIDGT(v time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldGT(FieldCreateID, v))
+// CreateAtGT applies the GT predicate on the "create_at" field.
+func CreateAtGT(v time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldGT(FieldCreateAt, v))
 }
 
-// CreateIDGTE applies the GTE predicate on the "create_id" field.
-func CreateIDGTE(v time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldGTE(FieldCreateID, v))
+// CreateAtGTE applies the GTE predicate on the "create_at" field.
+func CreateAtGTE(v time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldGTE(FieldCreateAt, v))
 }
 
-// CreateIDLT applies the LT predicate on the "create_id" field.
-func CreateIDLT(v time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldLT(FieldCreateID, v))
+// CreateAtLT applies the LT predicate on the "create_at" field.
+func CreateAtLT(v time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldLT(FieldCreateAt, v))
 }
 
-// CreateIDLTE applies the LTE predicate on the "create_id" field.
-func CreateIDLTE(v time.Time) predicate.FormSubmission {
-	return predicate.FormSubmission(sql.FieldLTE(FieldCreateID, v))
+// CreateAtLTE applies the LTE predicate on the "create_at" field.
+func CreateAtLTE(v time.Time) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldLTE(FieldCreateAt, v))
+}
+
+// IsDeletedEQ applies the EQ predicate on the "is_deleted" field.
+func IsDeletedEQ(v int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldEQ(FieldIsDeleted, v))
+}
+
+// IsDeletedNEQ applies the NEQ predicate on the "is_deleted" field.
+func IsDeletedNEQ(v int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldNEQ(FieldIsDeleted, v))
+}
+
+// IsDeletedIn applies the In predicate on the "is_deleted" field.
+func IsDeletedIn(vs ...int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldIn(FieldIsDeleted, vs...))
+}
+
+// IsDeletedNotIn applies the NotIn predicate on the "is_deleted" field.
+func IsDeletedNotIn(vs ...int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldNotIn(FieldIsDeleted, vs...))
+}
+
+// IsDeletedGT applies the GT predicate on the "is_deleted" field.
+func IsDeletedGT(v int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldGT(FieldIsDeleted, v))
+}
+
+// IsDeletedGTE applies the GTE predicate on the "is_deleted" field.
+func IsDeletedGTE(v int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldGTE(FieldIsDeleted, v))
+}
+
+// IsDeletedLT applies the LT predicate on the "is_deleted" field.
+func IsDeletedLT(v int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldLT(FieldIsDeleted, v))
+}
+
+// IsDeletedLTE applies the LTE predicate on the "is_deleted" field.
+func IsDeletedLTE(v int) predicate.FormSubmission {
+	return predicate.FormSubmission(sql.FieldLTE(FieldIsDeleted, v))
 }
 
 // And groups predicates with the AND operator between them.

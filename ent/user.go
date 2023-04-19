@@ -25,6 +25,8 @@ type User struct {
 	Role string `json:"role,omitempty"`
 	// Account holds the value of the "account" field.
 	Account string `json:"account,omitempty"`
+	// Disabled holds the value of the "disabled" field.
+	Disabled int `json:"disabled,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -32,6 +34,8 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case user.FieldDisabled:
+			values[i] = new(sql.NullInt64)
 		case user.FieldID, user.FieldPassword, user.FieldUsername, user.FieldPhone, user.FieldRole, user.FieldAccount:
 			values[i] = new(sql.NullString)
 		default:
@@ -85,6 +89,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Account = value.String
 			}
+		case user.FieldDisabled:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field disabled", values[i])
+			} else if value.Valid {
+				u.Disabled = int(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -127,6 +137,9 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("account=")
 	builder.WriteString(u.Account)
+	builder.WriteString(", ")
+	builder.WriteString("disabled=")
+	builder.WriteString(fmt.Sprintf("%v", u.Disabled))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -40,9 +40,30 @@ func (fsu *FormSubmissionUpdate) SetUserID(s string) *FormSubmissionUpdate {
 	return fsu
 }
 
-// SetCreateID sets the "create_id" field.
-func (fsu *FormSubmissionUpdate) SetCreateID(t time.Time) *FormSubmissionUpdate {
-	fsu.mutation.SetCreateID(t)
+// SetCreateAt sets the "create_at" field.
+func (fsu *FormSubmissionUpdate) SetCreateAt(t time.Time) *FormSubmissionUpdate {
+	fsu.mutation.SetCreateAt(t)
+	return fsu
+}
+
+// SetIsDeleted sets the "is_deleted" field.
+func (fsu *FormSubmissionUpdate) SetIsDeleted(i int) *FormSubmissionUpdate {
+	fsu.mutation.ResetIsDeleted()
+	fsu.mutation.SetIsDeleted(i)
+	return fsu
+}
+
+// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
+func (fsu *FormSubmissionUpdate) SetNillableIsDeleted(i *int) *FormSubmissionUpdate {
+	if i != nil {
+		fsu.SetIsDeleted(*i)
+	}
+	return fsu
+}
+
+// AddIsDeleted adds i to the "is_deleted" field.
+func (fsu *FormSubmissionUpdate) AddIsDeleted(i int) *FormSubmissionUpdate {
+	fsu.mutation.AddIsDeleted(i)
 	return fsu
 }
 
@@ -93,8 +114,14 @@ func (fsu *FormSubmissionUpdate) sqlSave(ctx context.Context) (n int, err error)
 	if value, ok := fsu.mutation.UserID(); ok {
 		_spec.SetField(formsubmission.FieldUserID, field.TypeString, value)
 	}
-	if value, ok := fsu.mutation.CreateID(); ok {
-		_spec.SetField(formsubmission.FieldCreateID, field.TypeTime, value)
+	if value, ok := fsu.mutation.CreateAt(); ok {
+		_spec.SetField(formsubmission.FieldCreateAt, field.TypeTime, value)
+	}
+	if value, ok := fsu.mutation.IsDeleted(); ok {
+		_spec.SetField(formsubmission.FieldIsDeleted, field.TypeInt, value)
+	}
+	if value, ok := fsu.mutation.AddedIsDeleted(); ok {
+		_spec.AddField(formsubmission.FieldIsDeleted, field.TypeInt, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, fsu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -128,9 +155,30 @@ func (fsuo *FormSubmissionUpdateOne) SetUserID(s string) *FormSubmissionUpdateOn
 	return fsuo
 }
 
-// SetCreateID sets the "create_id" field.
-func (fsuo *FormSubmissionUpdateOne) SetCreateID(t time.Time) *FormSubmissionUpdateOne {
-	fsuo.mutation.SetCreateID(t)
+// SetCreateAt sets the "create_at" field.
+func (fsuo *FormSubmissionUpdateOne) SetCreateAt(t time.Time) *FormSubmissionUpdateOne {
+	fsuo.mutation.SetCreateAt(t)
+	return fsuo
+}
+
+// SetIsDeleted sets the "is_deleted" field.
+func (fsuo *FormSubmissionUpdateOne) SetIsDeleted(i int) *FormSubmissionUpdateOne {
+	fsuo.mutation.ResetIsDeleted()
+	fsuo.mutation.SetIsDeleted(i)
+	return fsuo
+}
+
+// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
+func (fsuo *FormSubmissionUpdateOne) SetNillableIsDeleted(i *int) *FormSubmissionUpdateOne {
+	if i != nil {
+		fsuo.SetIsDeleted(*i)
+	}
+	return fsuo
+}
+
+// AddIsDeleted adds i to the "is_deleted" field.
+func (fsuo *FormSubmissionUpdateOne) AddIsDeleted(i int) *FormSubmissionUpdateOne {
+	fsuo.mutation.AddIsDeleted(i)
 	return fsuo
 }
 
@@ -211,8 +259,14 @@ func (fsuo *FormSubmissionUpdateOne) sqlSave(ctx context.Context) (_node *FormSu
 	if value, ok := fsuo.mutation.UserID(); ok {
 		_spec.SetField(formsubmission.FieldUserID, field.TypeString, value)
 	}
-	if value, ok := fsuo.mutation.CreateID(); ok {
-		_spec.SetField(formsubmission.FieldCreateID, field.TypeTime, value)
+	if value, ok := fsuo.mutation.CreateAt(); ok {
+		_spec.SetField(formsubmission.FieldCreateAt, field.TypeTime, value)
+	}
+	if value, ok := fsuo.mutation.IsDeleted(); ok {
+		_spec.SetField(formsubmission.FieldIsDeleted, field.TypeInt, value)
+	}
+	if value, ok := fsuo.mutation.AddedIsDeleted(); ok {
+		_spec.AddField(formsubmission.FieldIsDeleted, field.TypeInt, value)
 	}
 	_node = &FormSubmission{config: fsuo.config}
 	_spec.Assign = _node.assignValues

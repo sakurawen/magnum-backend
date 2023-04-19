@@ -21,7 +21,9 @@ type FormSubmission struct {
 	// 用户id
 	UserID string `json:"user_id,omitempty"`
 	// 创建时间
-	CreateID time.Time `json:"create_id,omitempty"`
+	CreateAt time.Time `json:"create_at,omitempty"`
+	// IsDeleted holds the value of the "is_deleted" field.
+	IsDeleted int `json:"is_deleted"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -29,9 +31,11 @@ func (*FormSubmission) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case formsubmission.FieldIsDeleted:
+			values[i] = new(sql.NullInt64)
 		case formsubmission.FieldID, formsubmission.FieldFormID, formsubmission.FieldUserID:
 			values[i] = new(sql.NullString)
-		case formsubmission.FieldCreateID:
+		case formsubmission.FieldCreateAt:
 			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type FormSubmission", columns[i])
@@ -66,11 +70,17 @@ func (fs *FormSubmission) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				fs.UserID = value.String
 			}
-		case formsubmission.FieldCreateID:
+		case formsubmission.FieldCreateAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field create_id", values[i])
+				return fmt.Errorf("unexpected type %T for field create_at", values[i])
 			} else if value.Valid {
-				fs.CreateID = value.Time
+				fs.CreateAt = value.Time
+			}
+		case formsubmission.FieldIsDeleted:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field is_deleted", values[i])
+			} else if value.Valid {
+				fs.IsDeleted = int(value.Int64)
 			}
 		}
 	}
@@ -106,8 +116,11 @@ func (fs *FormSubmission) String() string {
 	builder.WriteString("user_id=")
 	builder.WriteString(fs.UserID)
 	builder.WriteString(", ")
-	builder.WriteString("create_id=")
-	builder.WriteString(fs.CreateID.Format(time.ANSIC))
+	builder.WriteString("create_at=")
+	builder.WriteString(fs.CreateAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("is_deleted=")
+	builder.WriteString(fmt.Sprintf("%v", fs.IsDeleted))
 	builder.WriteByte(')')
 	return builder.String()
 }

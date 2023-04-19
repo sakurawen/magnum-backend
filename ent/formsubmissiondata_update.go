@@ -52,6 +52,27 @@ func (fsdu *FormSubmissionDataUpdate) SetCreateAt(t time.Time) *FormSubmissionDa
 	return fsdu
 }
 
+// SetIsDeleted sets the "is_deleted" field.
+func (fsdu *FormSubmissionDataUpdate) SetIsDeleted(i int) *FormSubmissionDataUpdate {
+	fsdu.mutation.ResetIsDeleted()
+	fsdu.mutation.SetIsDeleted(i)
+	return fsdu
+}
+
+// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
+func (fsdu *FormSubmissionDataUpdate) SetNillableIsDeleted(i *int) *FormSubmissionDataUpdate {
+	if i != nil {
+		fsdu.SetIsDeleted(*i)
+	}
+	return fsdu
+}
+
+// AddIsDeleted adds i to the "is_deleted" field.
+func (fsdu *FormSubmissionDataUpdate) AddIsDeleted(i int) *FormSubmissionDataUpdate {
+	fsdu.mutation.AddIsDeleted(i)
+	return fsdu
+}
+
 // Mutation returns the FormSubmissionDataMutation object of the builder.
 func (fsdu *FormSubmissionDataUpdate) Mutation() *FormSubmissionDataMutation {
 	return fsdu.mutation
@@ -105,6 +126,12 @@ func (fsdu *FormSubmissionDataUpdate) sqlSave(ctx context.Context) (n int, err e
 	if value, ok := fsdu.mutation.CreateAt(); ok {
 		_spec.SetField(formsubmissiondata.FieldCreateAt, field.TypeTime, value)
 	}
+	if value, ok := fsdu.mutation.IsDeleted(); ok {
+		_spec.SetField(formsubmissiondata.FieldIsDeleted, field.TypeInt, value)
+	}
+	if value, ok := fsdu.mutation.AddedIsDeleted(); ok {
+		_spec.AddField(formsubmissiondata.FieldIsDeleted, field.TypeInt, value)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, fsdu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{formsubmissiondata.Label}
@@ -146,6 +173,27 @@ func (fsduo *FormSubmissionDataUpdateOne) SetFieldValue(s string) *FormSubmissio
 // SetCreateAt sets the "create_at" field.
 func (fsduo *FormSubmissionDataUpdateOne) SetCreateAt(t time.Time) *FormSubmissionDataUpdateOne {
 	fsduo.mutation.SetCreateAt(t)
+	return fsduo
+}
+
+// SetIsDeleted sets the "is_deleted" field.
+func (fsduo *FormSubmissionDataUpdateOne) SetIsDeleted(i int) *FormSubmissionDataUpdateOne {
+	fsduo.mutation.ResetIsDeleted()
+	fsduo.mutation.SetIsDeleted(i)
+	return fsduo
+}
+
+// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
+func (fsduo *FormSubmissionDataUpdateOne) SetNillableIsDeleted(i *int) *FormSubmissionDataUpdateOne {
+	if i != nil {
+		fsduo.SetIsDeleted(*i)
+	}
+	return fsduo
+}
+
+// AddIsDeleted adds i to the "is_deleted" field.
+func (fsduo *FormSubmissionDataUpdateOne) AddIsDeleted(i int) *FormSubmissionDataUpdateOne {
+	fsduo.mutation.AddIsDeleted(i)
 	return fsduo
 }
 
@@ -231,6 +279,12 @@ func (fsduo *FormSubmissionDataUpdateOne) sqlSave(ctx context.Context) (_node *F
 	}
 	if value, ok := fsduo.mutation.CreateAt(); ok {
 		_spec.SetField(formsubmissiondata.FieldCreateAt, field.TypeTime, value)
+	}
+	if value, ok := fsduo.mutation.IsDeleted(); ok {
+		_spec.SetField(formsubmissiondata.FieldIsDeleted, field.TypeInt, value)
+	}
+	if value, ok := fsduo.mutation.AddedIsDeleted(); ok {
+		_spec.AddField(formsubmissiondata.FieldIsDeleted, field.TypeInt, value)
 	}
 	_node = &FormSubmissionData{config: fsduo.config}
 	_spec.Assign = _node.assignValues

@@ -17,6 +17,10 @@ const (
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
 	FieldUpdateAt = "update_at"
+	// FieldIsRelease holds the string denoting the is_release field in the database.
+	FieldIsRelease = "is_release"
+	// FieldDisabled holds the string denoting the disabled field in the database.
+	FieldDisabled = "disabled"
 	// Table holds the table name of the form in the database.
 	Table = "forms"
 )
@@ -29,6 +33,8 @@ var Columns = []string{
 	FieldDescription,
 	FieldCreateAt,
 	FieldUpdateAt,
+	FieldIsRelease,
+	FieldDisabled,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -42,6 +48,10 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultIsRelease holds the default value on creation for the "is_release" field.
+	DefaultIsRelease int
+	// DefaultDisabled holds the default value on creation for the "disabled" field.
+	DefaultDisabled int
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() string
 )

@@ -11,22 +11,16 @@ const (
 	FieldFormID = "form_id"
 	// FieldFieldType holds the string denoting the field_type field in the database.
 	FieldFieldType = "field_type"
-	// FieldFieldLabel holds the string denoting the field_label field in the database.
-	FieldFieldLabel = "field_label"
-	// FieldFiledName holds the string denoting the filed_name field in the database.
-	FieldFiledName = "filed_name"
-	// FieldIsRequired holds the string denoting the is_required field in the database.
-	FieldIsRequired = "is_required"
+	// FieldFieldName holds the string denoting the field_name field in the database.
+	FieldFieldName = "field_name"
 	// FieldOrderIndex holds the string denoting the order_index field in the database.
 	FieldOrderIndex = "order_index"
 	// FieldCreateAt holds the string denoting the create_at field in the database.
 	FieldCreateAt = "create_at"
 	// FieldUpdateAt holds the string denoting the update_at field in the database.
 	FieldUpdateAt = "update_at"
-	// FieldOptions holds the string denoting the options field in the database.
-	FieldOptions = "options"
-	// FieldPlaceholder holds the string denoting the placeholder field in the database.
-	FieldPlaceholder = "placeholder"
+	// FieldDisabled holds the string denoting the disabled field in the database.
+	FieldDisabled = "disabled"
 	// Table holds the table name of the formfield in the database.
 	Table = "form_fields"
 )
@@ -36,14 +30,11 @@ var Columns = []string{
 	FieldID,
 	FieldFormID,
 	FieldFieldType,
-	FieldFieldLabel,
-	FieldFiledName,
-	FieldIsRequired,
+	FieldFieldName,
 	FieldOrderIndex,
 	FieldCreateAt,
 	FieldUpdateAt,
-	FieldOptions,
-	FieldPlaceholder,
+	FieldDisabled,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -57,8 +48,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
-	// DefaultIsRequired holds the default value on creation for the "is_required" field.
-	DefaultIsRequired int
+	// DefaultDisabled holds the default value on creation for the "disabled" field.
+	DefaultDisabled int
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() string
 )

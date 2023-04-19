@@ -26,6 +26,10 @@ type Form struct {
 	CreateAt time.Time `json:"create_at,omitempty"`
 	// 更新日期
 	UpdateAt time.Time `json:"update_at,omitempty"`
+	// 是否发布，1是0否
+	IsRelease int `json:"is_release"`
+	// Disabled holds the value of the "disabled" field.
+	Disabled int `json:"disabled"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -33,6 +37,8 @@ func (*Form) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case form.FieldIsRelease, form.FieldDisabled:
+			values[i] = new(sql.NullInt64)
 		case form.FieldID, form.FieldUserID, form.FieldTitle, form.FieldDescription:
 			values[i] = new(sql.NullString)
 		case form.FieldCreateAt, form.FieldUpdateAt:
@@ -88,6 +94,18 @@ func (f *Form) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				f.UpdateAt = value.Time
 			}
+		case form.FieldIsRelease:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field is_release", values[i])
+			} else if value.Valid {
+				f.IsRelease = int(value.Int64)
+			}
+		case form.FieldDisabled:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field disabled", values[i])
+			} else if value.Valid {
+				f.Disabled = int(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -130,6 +148,12 @@ func (f *Form) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("update_at=")
 	builder.WriteString(f.UpdateAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("is_release=")
+	builder.WriteString(fmt.Sprintf("%v", f.IsRelease))
+	builder.WriteString(", ")
+	builder.WriteString("disabled=")
+	builder.WriteString(fmt.Sprintf("%v", f.Disabled))
 	builder.WriteByte(')')
 	return builder.String()
 }

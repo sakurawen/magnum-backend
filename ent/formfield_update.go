@@ -40,36 +40,9 @@ func (ffu *FormFieldUpdate) SetFieldType(s string) *FormFieldUpdate {
 	return ffu
 }
 
-// SetFieldLabel sets the "field_label" field.
-func (ffu *FormFieldUpdate) SetFieldLabel(s string) *FormFieldUpdate {
-	ffu.mutation.SetFieldLabel(s)
-	return ffu
-}
-
-// SetFiledName sets the "filed_name" field.
-func (ffu *FormFieldUpdate) SetFiledName(s string) *FormFieldUpdate {
-	ffu.mutation.SetFiledName(s)
-	return ffu
-}
-
-// SetIsRequired sets the "is_required" field.
-func (ffu *FormFieldUpdate) SetIsRequired(i int) *FormFieldUpdate {
-	ffu.mutation.ResetIsRequired()
-	ffu.mutation.SetIsRequired(i)
-	return ffu
-}
-
-// SetNillableIsRequired sets the "is_required" field if the given value is not nil.
-func (ffu *FormFieldUpdate) SetNillableIsRequired(i *int) *FormFieldUpdate {
-	if i != nil {
-		ffu.SetIsRequired(*i)
-	}
-	return ffu
-}
-
-// AddIsRequired adds i to the "is_required" field.
-func (ffu *FormFieldUpdate) AddIsRequired(i int) *FormFieldUpdate {
-	ffu.mutation.AddIsRequired(i)
+// SetFieldName sets the "field_name" field.
+func (ffu *FormFieldUpdate) SetFieldName(s string) *FormFieldUpdate {
+	ffu.mutation.SetFieldName(s)
 	return ffu
 }
 
@@ -80,9 +53,23 @@ func (ffu *FormFieldUpdate) SetOrderIndex(i int) *FormFieldUpdate {
 	return ffu
 }
 
+// SetNillableOrderIndex sets the "order_index" field if the given value is not nil.
+func (ffu *FormFieldUpdate) SetNillableOrderIndex(i *int) *FormFieldUpdate {
+	if i != nil {
+		ffu.SetOrderIndex(*i)
+	}
+	return ffu
+}
+
 // AddOrderIndex adds i to the "order_index" field.
 func (ffu *FormFieldUpdate) AddOrderIndex(i int) *FormFieldUpdate {
 	ffu.mutation.AddOrderIndex(i)
+	return ffu
+}
+
+// ClearOrderIndex clears the value of the "order_index" field.
+func (ffu *FormFieldUpdate) ClearOrderIndex() *FormFieldUpdate {
+	ffu.mutation.ClearOrderIndex()
 	return ffu
 }
 
@@ -112,43 +99,24 @@ func (ffu *FormFieldUpdate) ClearUpdateAt() *FormFieldUpdate {
 	return ffu
 }
 
-// SetOptions sets the "options" field.
-func (ffu *FormFieldUpdate) SetOptions(s string) *FormFieldUpdate {
-	ffu.mutation.SetOptions(s)
+// SetDisabled sets the "disabled" field.
+func (ffu *FormFieldUpdate) SetDisabled(i int) *FormFieldUpdate {
+	ffu.mutation.ResetDisabled()
+	ffu.mutation.SetDisabled(i)
 	return ffu
 }
 
-// SetNillableOptions sets the "options" field if the given value is not nil.
-func (ffu *FormFieldUpdate) SetNillableOptions(s *string) *FormFieldUpdate {
-	if s != nil {
-		ffu.SetOptions(*s)
+// SetNillableDisabled sets the "disabled" field if the given value is not nil.
+func (ffu *FormFieldUpdate) SetNillableDisabled(i *int) *FormFieldUpdate {
+	if i != nil {
+		ffu.SetDisabled(*i)
 	}
 	return ffu
 }
 
-// ClearOptions clears the value of the "options" field.
-func (ffu *FormFieldUpdate) ClearOptions() *FormFieldUpdate {
-	ffu.mutation.ClearOptions()
-	return ffu
-}
-
-// SetPlaceholder sets the "placeholder" field.
-func (ffu *FormFieldUpdate) SetPlaceholder(s string) *FormFieldUpdate {
-	ffu.mutation.SetPlaceholder(s)
-	return ffu
-}
-
-// SetNillablePlaceholder sets the "placeholder" field if the given value is not nil.
-func (ffu *FormFieldUpdate) SetNillablePlaceholder(s *string) *FormFieldUpdate {
-	if s != nil {
-		ffu.SetPlaceholder(*s)
-	}
-	return ffu
-}
-
-// ClearPlaceholder clears the value of the "placeholder" field.
-func (ffu *FormFieldUpdate) ClearPlaceholder() *FormFieldUpdate {
-	ffu.mutation.ClearPlaceholder()
+// AddDisabled adds i to the "disabled" field.
+func (ffu *FormFieldUpdate) AddDisabled(i int) *FormFieldUpdate {
+	ffu.mutation.AddDisabled(i)
 	return ffu
 }
 
@@ -199,23 +167,17 @@ func (ffu *FormFieldUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ffu.mutation.FieldType(); ok {
 		_spec.SetField(formfield.FieldFieldType, field.TypeString, value)
 	}
-	if value, ok := ffu.mutation.FieldLabel(); ok {
-		_spec.SetField(formfield.FieldFieldLabel, field.TypeString, value)
-	}
-	if value, ok := ffu.mutation.FiledName(); ok {
-		_spec.SetField(formfield.FieldFiledName, field.TypeString, value)
-	}
-	if value, ok := ffu.mutation.IsRequired(); ok {
-		_spec.SetField(formfield.FieldIsRequired, field.TypeInt, value)
-	}
-	if value, ok := ffu.mutation.AddedIsRequired(); ok {
-		_spec.AddField(formfield.FieldIsRequired, field.TypeInt, value)
+	if value, ok := ffu.mutation.FieldName(); ok {
+		_spec.SetField(formfield.FieldFieldName, field.TypeString, value)
 	}
 	if value, ok := ffu.mutation.OrderIndex(); ok {
 		_spec.SetField(formfield.FieldOrderIndex, field.TypeInt, value)
 	}
 	if value, ok := ffu.mutation.AddedOrderIndex(); ok {
 		_spec.AddField(formfield.FieldOrderIndex, field.TypeInt, value)
+	}
+	if ffu.mutation.OrderIndexCleared() {
+		_spec.ClearField(formfield.FieldOrderIndex, field.TypeInt)
 	}
 	if value, ok := ffu.mutation.CreateAt(); ok {
 		_spec.SetField(formfield.FieldCreateAt, field.TypeTime, value)
@@ -226,17 +188,11 @@ func (ffu *FormFieldUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if ffu.mutation.UpdateAtCleared() {
 		_spec.ClearField(formfield.FieldUpdateAt, field.TypeTime)
 	}
-	if value, ok := ffu.mutation.Options(); ok {
-		_spec.SetField(formfield.FieldOptions, field.TypeString, value)
+	if value, ok := ffu.mutation.Disabled(); ok {
+		_spec.SetField(formfield.FieldDisabled, field.TypeInt, value)
 	}
-	if ffu.mutation.OptionsCleared() {
-		_spec.ClearField(formfield.FieldOptions, field.TypeString)
-	}
-	if value, ok := ffu.mutation.Placeholder(); ok {
-		_spec.SetField(formfield.FieldPlaceholder, field.TypeString, value)
-	}
-	if ffu.mutation.PlaceholderCleared() {
-		_spec.ClearField(formfield.FieldPlaceholder, field.TypeString)
+	if value, ok := ffu.mutation.AddedDisabled(); ok {
+		_spec.AddField(formfield.FieldDisabled, field.TypeInt, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ffu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -270,36 +226,9 @@ func (ffuo *FormFieldUpdateOne) SetFieldType(s string) *FormFieldUpdateOne {
 	return ffuo
 }
 
-// SetFieldLabel sets the "field_label" field.
-func (ffuo *FormFieldUpdateOne) SetFieldLabel(s string) *FormFieldUpdateOne {
-	ffuo.mutation.SetFieldLabel(s)
-	return ffuo
-}
-
-// SetFiledName sets the "filed_name" field.
-func (ffuo *FormFieldUpdateOne) SetFiledName(s string) *FormFieldUpdateOne {
-	ffuo.mutation.SetFiledName(s)
-	return ffuo
-}
-
-// SetIsRequired sets the "is_required" field.
-func (ffuo *FormFieldUpdateOne) SetIsRequired(i int) *FormFieldUpdateOne {
-	ffuo.mutation.ResetIsRequired()
-	ffuo.mutation.SetIsRequired(i)
-	return ffuo
-}
-
-// SetNillableIsRequired sets the "is_required" field if the given value is not nil.
-func (ffuo *FormFieldUpdateOne) SetNillableIsRequired(i *int) *FormFieldUpdateOne {
-	if i != nil {
-		ffuo.SetIsRequired(*i)
-	}
-	return ffuo
-}
-
-// AddIsRequired adds i to the "is_required" field.
-func (ffuo *FormFieldUpdateOne) AddIsRequired(i int) *FormFieldUpdateOne {
-	ffuo.mutation.AddIsRequired(i)
+// SetFieldName sets the "field_name" field.
+func (ffuo *FormFieldUpdateOne) SetFieldName(s string) *FormFieldUpdateOne {
+	ffuo.mutation.SetFieldName(s)
 	return ffuo
 }
 
@@ -310,9 +239,23 @@ func (ffuo *FormFieldUpdateOne) SetOrderIndex(i int) *FormFieldUpdateOne {
 	return ffuo
 }
 
+// SetNillableOrderIndex sets the "order_index" field if the given value is not nil.
+func (ffuo *FormFieldUpdateOne) SetNillableOrderIndex(i *int) *FormFieldUpdateOne {
+	if i != nil {
+		ffuo.SetOrderIndex(*i)
+	}
+	return ffuo
+}
+
 // AddOrderIndex adds i to the "order_index" field.
 func (ffuo *FormFieldUpdateOne) AddOrderIndex(i int) *FormFieldUpdateOne {
 	ffuo.mutation.AddOrderIndex(i)
+	return ffuo
+}
+
+// ClearOrderIndex clears the value of the "order_index" field.
+func (ffuo *FormFieldUpdateOne) ClearOrderIndex() *FormFieldUpdateOne {
+	ffuo.mutation.ClearOrderIndex()
 	return ffuo
 }
 
@@ -342,43 +285,24 @@ func (ffuo *FormFieldUpdateOne) ClearUpdateAt() *FormFieldUpdateOne {
 	return ffuo
 }
 
-// SetOptions sets the "options" field.
-func (ffuo *FormFieldUpdateOne) SetOptions(s string) *FormFieldUpdateOne {
-	ffuo.mutation.SetOptions(s)
+// SetDisabled sets the "disabled" field.
+func (ffuo *FormFieldUpdateOne) SetDisabled(i int) *FormFieldUpdateOne {
+	ffuo.mutation.ResetDisabled()
+	ffuo.mutation.SetDisabled(i)
 	return ffuo
 }
 
-// SetNillableOptions sets the "options" field if the given value is not nil.
-func (ffuo *FormFieldUpdateOne) SetNillableOptions(s *string) *FormFieldUpdateOne {
-	if s != nil {
-		ffuo.SetOptions(*s)
+// SetNillableDisabled sets the "disabled" field if the given value is not nil.
+func (ffuo *FormFieldUpdateOne) SetNillableDisabled(i *int) *FormFieldUpdateOne {
+	if i != nil {
+		ffuo.SetDisabled(*i)
 	}
 	return ffuo
 }
 
-// ClearOptions clears the value of the "options" field.
-func (ffuo *FormFieldUpdateOne) ClearOptions() *FormFieldUpdateOne {
-	ffuo.mutation.ClearOptions()
-	return ffuo
-}
-
-// SetPlaceholder sets the "placeholder" field.
-func (ffuo *FormFieldUpdateOne) SetPlaceholder(s string) *FormFieldUpdateOne {
-	ffuo.mutation.SetPlaceholder(s)
-	return ffuo
-}
-
-// SetNillablePlaceholder sets the "placeholder" field if the given value is not nil.
-func (ffuo *FormFieldUpdateOne) SetNillablePlaceholder(s *string) *FormFieldUpdateOne {
-	if s != nil {
-		ffuo.SetPlaceholder(*s)
-	}
-	return ffuo
-}
-
-// ClearPlaceholder clears the value of the "placeholder" field.
-func (ffuo *FormFieldUpdateOne) ClearPlaceholder() *FormFieldUpdateOne {
-	ffuo.mutation.ClearPlaceholder()
+// AddDisabled adds i to the "disabled" field.
+func (ffuo *FormFieldUpdateOne) AddDisabled(i int) *FormFieldUpdateOne {
+	ffuo.mutation.AddDisabled(i)
 	return ffuo
 }
 
@@ -459,23 +383,17 @@ func (ffuo *FormFieldUpdateOne) sqlSave(ctx context.Context) (_node *FormField, 
 	if value, ok := ffuo.mutation.FieldType(); ok {
 		_spec.SetField(formfield.FieldFieldType, field.TypeString, value)
 	}
-	if value, ok := ffuo.mutation.FieldLabel(); ok {
-		_spec.SetField(formfield.FieldFieldLabel, field.TypeString, value)
-	}
-	if value, ok := ffuo.mutation.FiledName(); ok {
-		_spec.SetField(formfield.FieldFiledName, field.TypeString, value)
-	}
-	if value, ok := ffuo.mutation.IsRequired(); ok {
-		_spec.SetField(formfield.FieldIsRequired, field.TypeInt, value)
-	}
-	if value, ok := ffuo.mutation.AddedIsRequired(); ok {
-		_spec.AddField(formfield.FieldIsRequired, field.TypeInt, value)
+	if value, ok := ffuo.mutation.FieldName(); ok {
+		_spec.SetField(formfield.FieldFieldName, field.TypeString, value)
 	}
 	if value, ok := ffuo.mutation.OrderIndex(); ok {
 		_spec.SetField(formfield.FieldOrderIndex, field.TypeInt, value)
 	}
 	if value, ok := ffuo.mutation.AddedOrderIndex(); ok {
 		_spec.AddField(formfield.FieldOrderIndex, field.TypeInt, value)
+	}
+	if ffuo.mutation.OrderIndexCleared() {
+		_spec.ClearField(formfield.FieldOrderIndex, field.TypeInt)
 	}
 	if value, ok := ffuo.mutation.CreateAt(); ok {
 		_spec.SetField(formfield.FieldCreateAt, field.TypeTime, value)
@@ -486,17 +404,11 @@ func (ffuo *FormFieldUpdateOne) sqlSave(ctx context.Context) (_node *FormField, 
 	if ffuo.mutation.UpdateAtCleared() {
 		_spec.ClearField(formfield.FieldUpdateAt, field.TypeTime)
 	}
-	if value, ok := ffuo.mutation.Options(); ok {
-		_spec.SetField(formfield.FieldOptions, field.TypeString, value)
+	if value, ok := ffuo.mutation.Disabled(); ok {
+		_spec.SetField(formfield.FieldDisabled, field.TypeInt, value)
 	}
-	if ffuo.mutation.OptionsCleared() {
-		_spec.ClearField(formfield.FieldOptions, field.TypeString)
-	}
-	if value, ok := ffuo.mutation.Placeholder(); ok {
-		_spec.SetField(formfield.FieldPlaceholder, field.TypeString, value)
-	}
-	if ffuo.mutation.PlaceholderCleared() {
-		_spec.ClearField(formfield.FieldPlaceholder, field.TypeString)
+	if value, ok := ffuo.mutation.AddedDisabled(); ok {
+		_spec.AddField(formfield.FieldDisabled, field.TypeInt, value)
 	}
 	_node = &FormField{config: ffuo.config}
 	_spec.Assign = _node.assignValues

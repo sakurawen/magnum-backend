@@ -20,6 +20,14 @@ func Success(ctx echo.Context, data any) error {
 	})
 }
 
+func Msg(ctx echo.Context, data any, msg string) error {
+	return ctx.JSON(http.StatusOK, &result{
+		http.StatusOK,
+		data,
+		msg,
+	})
+}
+
 // Error 错误响应
 func Error(ctx echo.Context, msg string) error {
 	return ctx.JSON(http.StatusOK, &result{

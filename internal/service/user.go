@@ -16,7 +16,7 @@ type User struct {
 
 func (User) Login(f *req.Login) (string, *ent.User, error) {
 	u, err := app.DB.User.Query().
-		Where(user.Username(f.Username), user.Password(f.Password)).
+		Where(user.Username(f.Username), user.Password(f.Password), user.Disabled(0)).
 		Only(context.Background())
 	if err != nil {
 		return "", nil, errors.New("登录失败，请检查用户名和密码")

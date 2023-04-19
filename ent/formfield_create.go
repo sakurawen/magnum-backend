@@ -32,35 +32,23 @@ func (ffc *FormFieldCreate) SetFieldType(s string) *FormFieldCreate {
 	return ffc
 }
 
-// SetFieldLabel sets the "field_label" field.
-func (ffc *FormFieldCreate) SetFieldLabel(s string) *FormFieldCreate {
-	ffc.mutation.SetFieldLabel(s)
-	return ffc
-}
-
-// SetFiledName sets the "filed_name" field.
-func (ffc *FormFieldCreate) SetFiledName(s string) *FormFieldCreate {
-	ffc.mutation.SetFiledName(s)
-	return ffc
-}
-
-// SetIsRequired sets the "is_required" field.
-func (ffc *FormFieldCreate) SetIsRequired(i int) *FormFieldCreate {
-	ffc.mutation.SetIsRequired(i)
-	return ffc
-}
-
-// SetNillableIsRequired sets the "is_required" field if the given value is not nil.
-func (ffc *FormFieldCreate) SetNillableIsRequired(i *int) *FormFieldCreate {
-	if i != nil {
-		ffc.SetIsRequired(*i)
-	}
+// SetFieldName sets the "field_name" field.
+func (ffc *FormFieldCreate) SetFieldName(s string) *FormFieldCreate {
+	ffc.mutation.SetFieldName(s)
 	return ffc
 }
 
 // SetOrderIndex sets the "order_index" field.
 func (ffc *FormFieldCreate) SetOrderIndex(i int) *FormFieldCreate {
 	ffc.mutation.SetOrderIndex(i)
+	return ffc
+}
+
+// SetNillableOrderIndex sets the "order_index" field if the given value is not nil.
+func (ffc *FormFieldCreate) SetNillableOrderIndex(i *int) *FormFieldCreate {
+	if i != nil {
+		ffc.SetOrderIndex(*i)
+	}
 	return ffc
 }
 
@@ -84,30 +72,16 @@ func (ffc *FormFieldCreate) SetNillableUpdateAt(t *time.Time) *FormFieldCreate {
 	return ffc
 }
 
-// SetOptions sets the "options" field.
-func (ffc *FormFieldCreate) SetOptions(s string) *FormFieldCreate {
-	ffc.mutation.SetOptions(s)
+// SetDisabled sets the "disabled" field.
+func (ffc *FormFieldCreate) SetDisabled(i int) *FormFieldCreate {
+	ffc.mutation.SetDisabled(i)
 	return ffc
 }
 
-// SetNillableOptions sets the "options" field if the given value is not nil.
-func (ffc *FormFieldCreate) SetNillableOptions(s *string) *FormFieldCreate {
-	if s != nil {
-		ffc.SetOptions(*s)
-	}
-	return ffc
-}
-
-// SetPlaceholder sets the "placeholder" field.
-func (ffc *FormFieldCreate) SetPlaceholder(s string) *FormFieldCreate {
-	ffc.mutation.SetPlaceholder(s)
-	return ffc
-}
-
-// SetNillablePlaceholder sets the "placeholder" field if the given value is not nil.
-func (ffc *FormFieldCreate) SetNillablePlaceholder(s *string) *FormFieldCreate {
-	if s != nil {
-		ffc.SetPlaceholder(*s)
+// SetNillableDisabled sets the "disabled" field if the given value is not nil.
+func (ffc *FormFieldCreate) SetNillableDisabled(i *int) *FormFieldCreate {
+	if i != nil {
+		ffc.SetDisabled(*i)
 	}
 	return ffc
 }
@@ -161,9 +135,9 @@ func (ffc *FormFieldCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (ffc *FormFieldCreate) defaults() {
-	if _, ok := ffc.mutation.IsRequired(); !ok {
-		v := formfield.DefaultIsRequired
-		ffc.mutation.SetIsRequired(v)
+	if _, ok := ffc.mutation.Disabled(); !ok {
+		v := formfield.DefaultDisabled
+		ffc.mutation.SetDisabled(v)
 	}
 	if _, ok := ffc.mutation.ID(); !ok {
 		v := formfield.DefaultID()
@@ -179,20 +153,14 @@ func (ffc *FormFieldCreate) check() error {
 	if _, ok := ffc.mutation.FieldType(); !ok {
 		return &ValidationError{Name: "field_type", err: errors.New(`ent: missing required field "FormField.field_type"`)}
 	}
-	if _, ok := ffc.mutation.FieldLabel(); !ok {
-		return &ValidationError{Name: "field_label", err: errors.New(`ent: missing required field "FormField.field_label"`)}
-	}
-	if _, ok := ffc.mutation.FiledName(); !ok {
-		return &ValidationError{Name: "filed_name", err: errors.New(`ent: missing required field "FormField.filed_name"`)}
-	}
-	if _, ok := ffc.mutation.IsRequired(); !ok {
-		return &ValidationError{Name: "is_required", err: errors.New(`ent: missing required field "FormField.is_required"`)}
-	}
-	if _, ok := ffc.mutation.OrderIndex(); !ok {
-		return &ValidationError{Name: "order_index", err: errors.New(`ent: missing required field "FormField.order_index"`)}
+	if _, ok := ffc.mutation.FieldName(); !ok {
+		return &ValidationError{Name: "field_name", err: errors.New(`ent: missing required field "FormField.field_name"`)}
 	}
 	if _, ok := ffc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "FormField.create_at"`)}
+	}
+	if _, ok := ffc.mutation.Disabled(); !ok {
+		return &ValidationError{Name: "disabled", err: errors.New(`ent: missing required field "FormField.disabled"`)}
 	}
 	return nil
 }
@@ -237,17 +205,9 @@ func (ffc *FormFieldCreate) createSpec() (*FormField, *sqlgraph.CreateSpec) {
 		_spec.SetField(formfield.FieldFieldType, field.TypeString, value)
 		_node.FieldType = value
 	}
-	if value, ok := ffc.mutation.FieldLabel(); ok {
-		_spec.SetField(formfield.FieldFieldLabel, field.TypeString, value)
-		_node.FieldLabel = value
-	}
-	if value, ok := ffc.mutation.FiledName(); ok {
-		_spec.SetField(formfield.FieldFiledName, field.TypeString, value)
-		_node.FiledName = value
-	}
-	if value, ok := ffc.mutation.IsRequired(); ok {
-		_spec.SetField(formfield.FieldIsRequired, field.TypeInt, value)
-		_node.IsRequired = value
+	if value, ok := ffc.mutation.FieldName(); ok {
+		_spec.SetField(formfield.FieldFieldName, field.TypeString, value)
+		_node.FieldName = value
 	}
 	if value, ok := ffc.mutation.OrderIndex(); ok {
 		_spec.SetField(formfield.FieldOrderIndex, field.TypeInt, value)
@@ -261,13 +221,9 @@ func (ffc *FormFieldCreate) createSpec() (*FormField, *sqlgraph.CreateSpec) {
 		_spec.SetField(formfield.FieldUpdateAt, field.TypeTime, value)
 		_node.UpdateAt = value
 	}
-	if value, ok := ffc.mutation.Options(); ok {
-		_spec.SetField(formfield.FieldOptions, field.TypeString, value)
-		_node.Options = value
-	}
-	if value, ok := ffc.mutation.Placeholder(); ok {
-		_spec.SetField(formfield.FieldPlaceholder, field.TypeString, value)
-		_node.Placeholder = value
+	if value, ok := ffc.mutation.Disabled(); ok {
+		_spec.SetField(formfield.FieldDisabled, field.TypeInt, value)
+		_node.Disabled = value
 	}
 	return _node, _spec
 }

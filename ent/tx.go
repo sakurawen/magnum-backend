@@ -16,6 +16,8 @@ type Tx struct {
 	Form *FormClient
 	// FormField is the client for interacting with the FormField builders.
 	FormField *FormFieldClient
+	// FormFieldConfig is the client for interacting with the FormFieldConfig builders.
+	FormFieldConfig *FormFieldConfigClient
 	// FormSubmission is the client for interacting with the FormSubmission builders.
 	FormSubmission *FormSubmissionClient
 	// FormSubmissionData is the client for interacting with the FormSubmissionData builders.
@@ -155,6 +157,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.Form = NewFormClient(tx.config)
 	tx.FormField = NewFormFieldClient(tx.config)
+	tx.FormFieldConfig = NewFormFieldConfigClient(tx.config)
 	tx.FormSubmission = NewFormSubmissionClient(tx.config)
 	tx.FormSubmissionData = NewFormSubmissionDataClient(tx.config)
 	tx.User = NewUserClient(tx.config)

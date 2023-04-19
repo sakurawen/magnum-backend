@@ -78,6 +78,11 @@ func Account(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldAccount, v))
 }
 
+// Disabled applies equality check predicate on the "disabled" field. It's identical to DisabledEQ.
+func Disabled(v int) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldDisabled, v))
+}
+
 // PasswordEQ applies the EQ predicate on the "password" field.
 func PasswordEQ(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldPassword, v))
@@ -401,6 +406,46 @@ func AccountEqualFold(v string) predicate.User {
 // AccountContainsFold applies the ContainsFold predicate on the "account" field.
 func AccountContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldAccount, v))
+}
+
+// DisabledEQ applies the EQ predicate on the "disabled" field.
+func DisabledEQ(v int) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldDisabled, v))
+}
+
+// DisabledNEQ applies the NEQ predicate on the "disabled" field.
+func DisabledNEQ(v int) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldDisabled, v))
+}
+
+// DisabledIn applies the In predicate on the "disabled" field.
+func DisabledIn(vs ...int) predicate.User {
+	return predicate.User(sql.FieldIn(FieldDisabled, vs...))
+}
+
+// DisabledNotIn applies the NotIn predicate on the "disabled" field.
+func DisabledNotIn(vs ...int) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldDisabled, vs...))
+}
+
+// DisabledGT applies the GT predicate on the "disabled" field.
+func DisabledGT(v int) predicate.User {
+	return predicate.User(sql.FieldGT(FieldDisabled, v))
+}
+
+// DisabledGTE applies the GTE predicate on the "disabled" field.
+func DisabledGTE(v int) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldDisabled, v))
+}
+
+// DisabledLT applies the LT predicate on the "disabled" field.
+func DisabledLT(v int) predicate.User {
+	return predicate.User(sql.FieldLT(FieldDisabled, v))
+}
+
+// DisabledLTE applies the LTE predicate on the "disabled" field.
+func DisabledLTE(v int) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldDisabled, v))
 }
 
 // And groups predicates with the AND operator between them.

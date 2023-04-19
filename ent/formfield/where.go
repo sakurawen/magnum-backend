@@ -64,19 +64,9 @@ func FieldType(v string) predicate.FormField {
 	return predicate.FormField(sql.FieldEQ(FieldFieldType, v))
 }
 
-// FieldLabel applies equality check predicate on the "field_label" field. It's identical to FieldLabelEQ.
-func FieldLabel(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldFieldLabel, v))
-}
-
-// FiledName applies equality check predicate on the "filed_name" field. It's identical to FiledNameEQ.
-func FiledName(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldFiledName, v))
-}
-
-// IsRequired applies equality check predicate on the "is_required" field. It's identical to IsRequiredEQ.
-func IsRequired(v int) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldIsRequired, v))
+// FieldName applies equality check predicate on the "field_name" field. It's identical to FieldNameEQ.
+func FieldName(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldEQ(FieldFieldName, v))
 }
 
 // OrderIndex applies equality check predicate on the "order_index" field. It's identical to OrderIndexEQ.
@@ -94,14 +84,9 @@ func UpdateAt(v time.Time) predicate.FormField {
 	return predicate.FormField(sql.FieldEQ(FieldUpdateAt, v))
 }
 
-// Options applies equality check predicate on the "options" field. It's identical to OptionsEQ.
-func Options(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldOptions, v))
-}
-
-// Placeholder applies equality check predicate on the "placeholder" field. It's identical to PlaceholderEQ.
-func Placeholder(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldPlaceholder, v))
+// Disabled applies equality check predicate on the "disabled" field. It's identical to DisabledEQ.
+func Disabled(v int) predicate.FormField {
+	return predicate.FormField(sql.FieldEQ(FieldDisabled, v))
 }
 
 // FormIDEQ applies the EQ predicate on the "form_id" field.
@@ -234,174 +219,69 @@ func FieldTypeContainsFold(v string) predicate.FormField {
 	return predicate.FormField(sql.FieldContainsFold(FieldFieldType, v))
 }
 
-// FieldLabelEQ applies the EQ predicate on the "field_label" field.
-func FieldLabelEQ(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldFieldLabel, v))
+// FieldNameEQ applies the EQ predicate on the "field_name" field.
+func FieldNameEQ(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldEQ(FieldFieldName, v))
 }
 
-// FieldLabelNEQ applies the NEQ predicate on the "field_label" field.
-func FieldLabelNEQ(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldNEQ(FieldFieldLabel, v))
+// FieldNameNEQ applies the NEQ predicate on the "field_name" field.
+func FieldNameNEQ(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldNEQ(FieldFieldName, v))
 }
 
-// FieldLabelIn applies the In predicate on the "field_label" field.
-func FieldLabelIn(vs ...string) predicate.FormField {
-	return predicate.FormField(sql.FieldIn(FieldFieldLabel, vs...))
+// FieldNameIn applies the In predicate on the "field_name" field.
+func FieldNameIn(vs ...string) predicate.FormField {
+	return predicate.FormField(sql.FieldIn(FieldFieldName, vs...))
 }
 
-// FieldLabelNotIn applies the NotIn predicate on the "field_label" field.
-func FieldLabelNotIn(vs ...string) predicate.FormField {
-	return predicate.FormField(sql.FieldNotIn(FieldFieldLabel, vs...))
+// FieldNameNotIn applies the NotIn predicate on the "field_name" field.
+func FieldNameNotIn(vs ...string) predicate.FormField {
+	return predicate.FormField(sql.FieldNotIn(FieldFieldName, vs...))
 }
 
-// FieldLabelGT applies the GT predicate on the "field_label" field.
-func FieldLabelGT(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldGT(FieldFieldLabel, v))
+// FieldNameGT applies the GT predicate on the "field_name" field.
+func FieldNameGT(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldGT(FieldFieldName, v))
 }
 
-// FieldLabelGTE applies the GTE predicate on the "field_label" field.
-func FieldLabelGTE(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldGTE(FieldFieldLabel, v))
+// FieldNameGTE applies the GTE predicate on the "field_name" field.
+func FieldNameGTE(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldGTE(FieldFieldName, v))
 }
 
-// FieldLabelLT applies the LT predicate on the "field_label" field.
-func FieldLabelLT(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldLT(FieldFieldLabel, v))
+// FieldNameLT applies the LT predicate on the "field_name" field.
+func FieldNameLT(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldLT(FieldFieldName, v))
 }
 
-// FieldLabelLTE applies the LTE predicate on the "field_label" field.
-func FieldLabelLTE(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldLTE(FieldFieldLabel, v))
+// FieldNameLTE applies the LTE predicate on the "field_name" field.
+func FieldNameLTE(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldLTE(FieldFieldName, v))
 }
 
-// FieldLabelContains applies the Contains predicate on the "field_label" field.
-func FieldLabelContains(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldContains(FieldFieldLabel, v))
+// FieldNameContains applies the Contains predicate on the "field_name" field.
+func FieldNameContains(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldContains(FieldFieldName, v))
 }
 
-// FieldLabelHasPrefix applies the HasPrefix predicate on the "field_label" field.
-func FieldLabelHasPrefix(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldHasPrefix(FieldFieldLabel, v))
+// FieldNameHasPrefix applies the HasPrefix predicate on the "field_name" field.
+func FieldNameHasPrefix(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldHasPrefix(FieldFieldName, v))
 }
 
-// FieldLabelHasSuffix applies the HasSuffix predicate on the "field_label" field.
-func FieldLabelHasSuffix(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldHasSuffix(FieldFieldLabel, v))
+// FieldNameHasSuffix applies the HasSuffix predicate on the "field_name" field.
+func FieldNameHasSuffix(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldHasSuffix(FieldFieldName, v))
 }
 
-// FieldLabelEqualFold applies the EqualFold predicate on the "field_label" field.
-func FieldLabelEqualFold(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEqualFold(FieldFieldLabel, v))
+// FieldNameEqualFold applies the EqualFold predicate on the "field_name" field.
+func FieldNameEqualFold(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldEqualFold(FieldFieldName, v))
 }
 
-// FieldLabelContainsFold applies the ContainsFold predicate on the "field_label" field.
-func FieldLabelContainsFold(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldContainsFold(FieldFieldLabel, v))
-}
-
-// FiledNameEQ applies the EQ predicate on the "filed_name" field.
-func FiledNameEQ(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldFiledName, v))
-}
-
-// FiledNameNEQ applies the NEQ predicate on the "filed_name" field.
-func FiledNameNEQ(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldNEQ(FieldFiledName, v))
-}
-
-// FiledNameIn applies the In predicate on the "filed_name" field.
-func FiledNameIn(vs ...string) predicate.FormField {
-	return predicate.FormField(sql.FieldIn(FieldFiledName, vs...))
-}
-
-// FiledNameNotIn applies the NotIn predicate on the "filed_name" field.
-func FiledNameNotIn(vs ...string) predicate.FormField {
-	return predicate.FormField(sql.FieldNotIn(FieldFiledName, vs...))
-}
-
-// FiledNameGT applies the GT predicate on the "filed_name" field.
-func FiledNameGT(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldGT(FieldFiledName, v))
-}
-
-// FiledNameGTE applies the GTE predicate on the "filed_name" field.
-func FiledNameGTE(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldGTE(FieldFiledName, v))
-}
-
-// FiledNameLT applies the LT predicate on the "filed_name" field.
-func FiledNameLT(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldLT(FieldFiledName, v))
-}
-
-// FiledNameLTE applies the LTE predicate on the "filed_name" field.
-func FiledNameLTE(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldLTE(FieldFiledName, v))
-}
-
-// FiledNameContains applies the Contains predicate on the "filed_name" field.
-func FiledNameContains(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldContains(FieldFiledName, v))
-}
-
-// FiledNameHasPrefix applies the HasPrefix predicate on the "filed_name" field.
-func FiledNameHasPrefix(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldHasPrefix(FieldFiledName, v))
-}
-
-// FiledNameHasSuffix applies the HasSuffix predicate on the "filed_name" field.
-func FiledNameHasSuffix(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldHasSuffix(FieldFiledName, v))
-}
-
-// FiledNameEqualFold applies the EqualFold predicate on the "filed_name" field.
-func FiledNameEqualFold(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEqualFold(FieldFiledName, v))
-}
-
-// FiledNameContainsFold applies the ContainsFold predicate on the "filed_name" field.
-func FiledNameContainsFold(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldContainsFold(FieldFiledName, v))
-}
-
-// IsRequiredEQ applies the EQ predicate on the "is_required" field.
-func IsRequiredEQ(v int) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldIsRequired, v))
-}
-
-// IsRequiredNEQ applies the NEQ predicate on the "is_required" field.
-func IsRequiredNEQ(v int) predicate.FormField {
-	return predicate.FormField(sql.FieldNEQ(FieldIsRequired, v))
-}
-
-// IsRequiredIn applies the In predicate on the "is_required" field.
-func IsRequiredIn(vs ...int) predicate.FormField {
-	return predicate.FormField(sql.FieldIn(FieldIsRequired, vs...))
-}
-
-// IsRequiredNotIn applies the NotIn predicate on the "is_required" field.
-func IsRequiredNotIn(vs ...int) predicate.FormField {
-	return predicate.FormField(sql.FieldNotIn(FieldIsRequired, vs...))
-}
-
-// IsRequiredGT applies the GT predicate on the "is_required" field.
-func IsRequiredGT(v int) predicate.FormField {
-	return predicate.FormField(sql.FieldGT(FieldIsRequired, v))
-}
-
-// IsRequiredGTE applies the GTE predicate on the "is_required" field.
-func IsRequiredGTE(v int) predicate.FormField {
-	return predicate.FormField(sql.FieldGTE(FieldIsRequired, v))
-}
-
-// IsRequiredLT applies the LT predicate on the "is_required" field.
-func IsRequiredLT(v int) predicate.FormField {
-	return predicate.FormField(sql.FieldLT(FieldIsRequired, v))
-}
-
-// IsRequiredLTE applies the LTE predicate on the "is_required" field.
-func IsRequiredLTE(v int) predicate.FormField {
-	return predicate.FormField(sql.FieldLTE(FieldIsRequired, v))
+// FieldNameContainsFold applies the ContainsFold predicate on the "field_name" field.
+func FieldNameContainsFold(v string) predicate.FormField {
+	return predicate.FormField(sql.FieldContainsFold(FieldFieldName, v))
 }
 
 // OrderIndexEQ applies the EQ predicate on the "order_index" field.
@@ -442,6 +322,16 @@ func OrderIndexLT(v int) predicate.FormField {
 // OrderIndexLTE applies the LTE predicate on the "order_index" field.
 func OrderIndexLTE(v int) predicate.FormField {
 	return predicate.FormField(sql.FieldLTE(FieldOrderIndex, v))
+}
+
+// OrderIndexIsNil applies the IsNil predicate on the "order_index" field.
+func OrderIndexIsNil() predicate.FormField {
+	return predicate.FormField(sql.FieldIsNull(FieldOrderIndex))
+}
+
+// OrderIndexNotNil applies the NotNil predicate on the "order_index" field.
+func OrderIndexNotNil() predicate.FormField {
+	return predicate.FormField(sql.FieldNotNull(FieldOrderIndex))
 }
 
 // CreateAtEQ applies the EQ predicate on the "create_at" field.
@@ -534,154 +424,44 @@ func UpdateAtNotNil() predicate.FormField {
 	return predicate.FormField(sql.FieldNotNull(FieldUpdateAt))
 }
 
-// OptionsEQ applies the EQ predicate on the "options" field.
-func OptionsEQ(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldOptions, v))
+// DisabledEQ applies the EQ predicate on the "disabled" field.
+func DisabledEQ(v int) predicate.FormField {
+	return predicate.FormField(sql.FieldEQ(FieldDisabled, v))
 }
 
-// OptionsNEQ applies the NEQ predicate on the "options" field.
-func OptionsNEQ(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldNEQ(FieldOptions, v))
+// DisabledNEQ applies the NEQ predicate on the "disabled" field.
+func DisabledNEQ(v int) predicate.FormField {
+	return predicate.FormField(sql.FieldNEQ(FieldDisabled, v))
 }
 
-// OptionsIn applies the In predicate on the "options" field.
-func OptionsIn(vs ...string) predicate.FormField {
-	return predicate.FormField(sql.FieldIn(FieldOptions, vs...))
+// DisabledIn applies the In predicate on the "disabled" field.
+func DisabledIn(vs ...int) predicate.FormField {
+	return predicate.FormField(sql.FieldIn(FieldDisabled, vs...))
 }
 
-// OptionsNotIn applies the NotIn predicate on the "options" field.
-func OptionsNotIn(vs ...string) predicate.FormField {
-	return predicate.FormField(sql.FieldNotIn(FieldOptions, vs...))
+// DisabledNotIn applies the NotIn predicate on the "disabled" field.
+func DisabledNotIn(vs ...int) predicate.FormField {
+	return predicate.FormField(sql.FieldNotIn(FieldDisabled, vs...))
 }
 
-// OptionsGT applies the GT predicate on the "options" field.
-func OptionsGT(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldGT(FieldOptions, v))
+// DisabledGT applies the GT predicate on the "disabled" field.
+func DisabledGT(v int) predicate.FormField {
+	return predicate.FormField(sql.FieldGT(FieldDisabled, v))
 }
 
-// OptionsGTE applies the GTE predicate on the "options" field.
-func OptionsGTE(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldGTE(FieldOptions, v))
+// DisabledGTE applies the GTE predicate on the "disabled" field.
+func DisabledGTE(v int) predicate.FormField {
+	return predicate.FormField(sql.FieldGTE(FieldDisabled, v))
 }
 
-// OptionsLT applies the LT predicate on the "options" field.
-func OptionsLT(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldLT(FieldOptions, v))
+// DisabledLT applies the LT predicate on the "disabled" field.
+func DisabledLT(v int) predicate.FormField {
+	return predicate.FormField(sql.FieldLT(FieldDisabled, v))
 }
 
-// OptionsLTE applies the LTE predicate on the "options" field.
-func OptionsLTE(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldLTE(FieldOptions, v))
-}
-
-// OptionsContains applies the Contains predicate on the "options" field.
-func OptionsContains(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldContains(FieldOptions, v))
-}
-
-// OptionsHasPrefix applies the HasPrefix predicate on the "options" field.
-func OptionsHasPrefix(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldHasPrefix(FieldOptions, v))
-}
-
-// OptionsHasSuffix applies the HasSuffix predicate on the "options" field.
-func OptionsHasSuffix(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldHasSuffix(FieldOptions, v))
-}
-
-// OptionsIsNil applies the IsNil predicate on the "options" field.
-func OptionsIsNil() predicate.FormField {
-	return predicate.FormField(sql.FieldIsNull(FieldOptions))
-}
-
-// OptionsNotNil applies the NotNil predicate on the "options" field.
-func OptionsNotNil() predicate.FormField {
-	return predicate.FormField(sql.FieldNotNull(FieldOptions))
-}
-
-// OptionsEqualFold applies the EqualFold predicate on the "options" field.
-func OptionsEqualFold(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEqualFold(FieldOptions, v))
-}
-
-// OptionsContainsFold applies the ContainsFold predicate on the "options" field.
-func OptionsContainsFold(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldContainsFold(FieldOptions, v))
-}
-
-// PlaceholderEQ applies the EQ predicate on the "placeholder" field.
-func PlaceholderEQ(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEQ(FieldPlaceholder, v))
-}
-
-// PlaceholderNEQ applies the NEQ predicate on the "placeholder" field.
-func PlaceholderNEQ(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldNEQ(FieldPlaceholder, v))
-}
-
-// PlaceholderIn applies the In predicate on the "placeholder" field.
-func PlaceholderIn(vs ...string) predicate.FormField {
-	return predicate.FormField(sql.FieldIn(FieldPlaceholder, vs...))
-}
-
-// PlaceholderNotIn applies the NotIn predicate on the "placeholder" field.
-func PlaceholderNotIn(vs ...string) predicate.FormField {
-	return predicate.FormField(sql.FieldNotIn(FieldPlaceholder, vs...))
-}
-
-// PlaceholderGT applies the GT predicate on the "placeholder" field.
-func PlaceholderGT(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldGT(FieldPlaceholder, v))
-}
-
-// PlaceholderGTE applies the GTE predicate on the "placeholder" field.
-func PlaceholderGTE(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldGTE(FieldPlaceholder, v))
-}
-
-// PlaceholderLT applies the LT predicate on the "placeholder" field.
-func PlaceholderLT(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldLT(FieldPlaceholder, v))
-}
-
-// PlaceholderLTE applies the LTE predicate on the "placeholder" field.
-func PlaceholderLTE(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldLTE(FieldPlaceholder, v))
-}
-
-// PlaceholderContains applies the Contains predicate on the "placeholder" field.
-func PlaceholderContains(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldContains(FieldPlaceholder, v))
-}
-
-// PlaceholderHasPrefix applies the HasPrefix predicate on the "placeholder" field.
-func PlaceholderHasPrefix(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldHasPrefix(FieldPlaceholder, v))
-}
-
-// PlaceholderHasSuffix applies the HasSuffix predicate on the "placeholder" field.
-func PlaceholderHasSuffix(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldHasSuffix(FieldPlaceholder, v))
-}
-
-// PlaceholderIsNil applies the IsNil predicate on the "placeholder" field.
-func PlaceholderIsNil() predicate.FormField {
-	return predicate.FormField(sql.FieldIsNull(FieldPlaceholder))
-}
-
-// PlaceholderNotNil applies the NotNil predicate on the "placeholder" field.
-func PlaceholderNotNil() predicate.FormField {
-	return predicate.FormField(sql.FieldNotNull(FieldPlaceholder))
-}
-
-// PlaceholderEqualFold applies the EqualFold predicate on the "placeholder" field.
-func PlaceholderEqualFold(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldEqualFold(FieldPlaceholder, v))
-}
-
-// PlaceholderContainsFold applies the ContainsFold predicate on the "placeholder" field.
-func PlaceholderContainsFold(v string) predicate.FormField {
-	return predicate.FormField(sql.FieldContainsFold(FieldPlaceholder, v))
+// DisabledLTE applies the LTE predicate on the "disabled" field.
+func DisabledLTE(v int) predicate.FormField {
+	return predicate.FormField(sql.FieldLTE(FieldDisabled, v))
 }
 
 // And groups predicates with the AND operator between them.

@@ -12,6 +12,7 @@ import (
 
 	"magnum/ent/form"
 	"magnum/ent/formfield"
+	"magnum/ent/formfieldconfig"
 	"magnum/ent/formsubmission"
 	"magnum/ent/formsubmissiondata"
 	"magnum/ent/user"
@@ -30,6 +31,8 @@ type Client struct {
 	Form *FormClient
 	// FormField is the client for interacting with the FormField builders.
 	FormField *FormFieldClient
+	// FormFieldConfig is the client for interacting with the FormFieldConfig builders.
+	FormFieldConfig *FormFieldConfigClient
 	// FormSubmission is the client for interacting with the FormSubmission builders.
 	FormSubmission *FormSubmissionClient
 	// FormSubmissionData is the client for interacting with the FormSubmissionData builders.
@@ -51,6 +54,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Form = NewFormClient(c.config)
 	c.FormField = NewFormFieldClient(c.config)
+	c.FormFieldConfig = NewFormFieldConfigClient(c.config)
 	c.FormSubmission = NewFormSubmissionClient(c.config)
 	c.FormSubmissionData = NewFormSubmissionDataClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -138,6 +142,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:             cfg,
 		Form:               NewFormClient(cfg),
 		FormField:          NewFormFieldClient(cfg),
+		FormFieldConfig:    NewFormFieldConfigClient(cfg),
 		FormSubmission:     NewFormSubmissionClient(cfg),
 		FormSubmissionData: NewFormSubmissionDataClient(cfg),
 		User:               NewUserClient(cfg),
@@ -162,6 +167,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:             cfg,
 		Form:               NewFormClient(cfg),
 		FormField:          NewFormFieldClient(cfg),
+		FormFieldConfig:    NewFormFieldConfigClient(cfg),
 		FormSubmission:     NewFormSubmissionClient(cfg),
 		FormSubmissionData: NewFormSubmissionDataClient(cfg),
 		User:               NewUserClient(cfg),
@@ -193,21 +199,23 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Form.Use(hooks...)
-	c.FormField.Use(hooks...)
-	c.FormSubmission.Use(hooks...)
-	c.FormSubmissionData.Use(hooks...)
-	c.User.Use(hooks...)
+	for _, n := range []interface{ Use(...Hook) }{
+		c.Form, c.FormField, c.FormFieldConfig, c.FormSubmission, c.FormSubmissionData,
+		c.User,
+	} {
+		n.Use(hooks...)
+	}
 }
 
 // Intercept adds the query interceptors to all the entity clients.
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
-	c.Form.Intercept(interceptors...)
-	c.FormField.Intercept(interceptors...)
-	c.FormSubmission.Intercept(interceptors...)
-	c.FormSubmissionData.Intercept(interceptors...)
-	c.User.Intercept(interceptors...)
+	for _, n := range []interface{ Intercept(...Interceptor) }{
+		c.Form, c.FormField, c.FormFieldConfig, c.FormSubmission, c.FormSubmissionData,
+		c.User,
+	} {
+		n.Intercept(interceptors...)
+	}
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -217,6 +225,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Form.mutate(ctx, m)
 	case *FormFieldMutation:
 		return c.FormField.mutate(ctx, m)
+	case *FormFieldConfigMutation:
+		return c.FormFieldConfig.mutate(ctx, m)
 	case *FormSubmissionMutation:
 		return c.FormSubmission.mutate(ctx, m)
 	case *FormSubmissionDataMutation:
@@ -461,6 +471,124 @@ func (c *FormFieldClient) mutate(ctx context.Context, m *FormFieldMutation) (Val
 		return (&FormFieldDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown FormField mutation op: %q", m.Op())
+	}
+}
+
+// FormFieldConfigClient is a client for the FormFieldConfig schema.
+type FormFieldConfigClient struct {
+	config
+}
+
+// NewFormFieldConfigClient returns a client for the FormFieldConfig from the given config.
+func NewFormFieldConfigClient(c config) *FormFieldConfigClient {
+	return &FormFieldConfigClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `formfieldconfig.Hooks(f(g(h())))`.
+func (c *FormFieldConfigClient) Use(hooks ...Hook) {
+	c.hooks.FormFieldConfig = append(c.hooks.FormFieldConfig, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `formfieldconfig.Intercept(f(g(h())))`.
+func (c *FormFieldConfigClient) Intercept(interceptors ...Interceptor) {
+	c.inters.FormFieldConfig = append(c.inters.FormFieldConfig, interceptors...)
+}
+
+// Create returns a builder for creating a FormFieldConfig entity.
+func (c *FormFieldConfigClient) Create() *FormFieldConfigCreate {
+	mutation := newFormFieldConfigMutation(c.config, OpCreate)
+	return &FormFieldConfigCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of FormFieldConfig entities.
+func (c *FormFieldConfigClient) CreateBulk(builders ...*FormFieldConfigCreate) *FormFieldConfigCreateBulk {
+	return &FormFieldConfigCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for FormFieldConfig.
+func (c *FormFieldConfigClient) Update() *FormFieldConfigUpdate {
+	mutation := newFormFieldConfigMutation(c.config, OpUpdate)
+	return &FormFieldConfigUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *FormFieldConfigClient) UpdateOne(ffc *FormFieldConfig) *FormFieldConfigUpdateOne {
+	mutation := newFormFieldConfigMutation(c.config, OpUpdateOne, withFormFieldConfig(ffc))
+	return &FormFieldConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *FormFieldConfigClient) UpdateOneID(id string) *FormFieldConfigUpdateOne {
+	mutation := newFormFieldConfigMutation(c.config, OpUpdateOne, withFormFieldConfigID(id))
+	return &FormFieldConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for FormFieldConfig.
+func (c *FormFieldConfigClient) Delete() *FormFieldConfigDelete {
+	mutation := newFormFieldConfigMutation(c.config, OpDelete)
+	return &FormFieldConfigDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *FormFieldConfigClient) DeleteOne(ffc *FormFieldConfig) *FormFieldConfigDeleteOne {
+	return c.DeleteOneID(ffc.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *FormFieldConfigClient) DeleteOneID(id string) *FormFieldConfigDeleteOne {
+	builder := c.Delete().Where(formfieldconfig.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &FormFieldConfigDeleteOne{builder}
+}
+
+// Query returns a query builder for FormFieldConfig.
+func (c *FormFieldConfigClient) Query() *FormFieldConfigQuery {
+	return &FormFieldConfigQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeFormFieldConfig},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a FormFieldConfig entity by its id.
+func (c *FormFieldConfigClient) Get(ctx context.Context, id string) (*FormFieldConfig, error) {
+	return c.Query().Where(formfieldconfig.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *FormFieldConfigClient) GetX(ctx context.Context, id string) *FormFieldConfig {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *FormFieldConfigClient) Hooks() []Hook {
+	return c.hooks.FormFieldConfig
+}
+
+// Interceptors returns the client interceptors.
+func (c *FormFieldConfigClient) Interceptors() []Interceptor {
+	return c.inters.FormFieldConfig
+}
+
+func (c *FormFieldConfigClient) mutate(ctx context.Context, m *FormFieldConfigMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&FormFieldConfigCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&FormFieldConfigUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&FormFieldConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&FormFieldConfigDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown FormFieldConfig mutation op: %q", m.Op())
 	}
 }
 
@@ -821,9 +949,11 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Form, FormField, FormSubmission, FormSubmissionData, User []ent.Hook
+		Form, FormField, FormFieldConfig, FormSubmission, FormSubmissionData,
+		User []ent.Hook
 	}
 	inters struct {
-		Form, FormField, FormSubmission, FormSubmissionData, User []ent.Interceptor
+		Form, FormField, FormFieldConfig, FormSubmission, FormSubmissionData,
+		User []ent.Interceptor
 	}
 )

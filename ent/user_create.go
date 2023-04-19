@@ -57,6 +57,20 @@ func (uc *UserCreate) SetAccount(s string) *UserCreate {
 	return uc
 }
 
+// SetDisabled sets the "disabled" field.
+func (uc *UserCreate) SetDisabled(i int) *UserCreate {
+	uc.mutation.SetDisabled(i)
+	return uc
+}
+
+// SetNillableDisabled sets the "disabled" field if the given value is not nil.
+func (uc *UserCreate) SetNillableDisabled(i *int) *UserCreate {
+	if i != nil {
+		uc.SetDisabled(*i)
+	}
+	return uc
+}
+
 // SetID sets the "id" field.
 func (uc *UserCreate) SetID(s string) *UserCreate {
 	uc.mutation.SetID(s)
@@ -110,6 +124,10 @@ func (uc *UserCreate) defaults() {
 		v := user.DefaultRole
 		uc.mutation.SetRole(v)
 	}
+	if _, ok := uc.mutation.Disabled(); !ok {
+		v := user.DefaultDisabled
+		uc.mutation.SetDisabled(v)
+	}
 	if _, ok := uc.mutation.ID(); !ok {
 		v := user.DefaultID()
 		uc.mutation.SetID(v)
@@ -132,6 +150,9 @@ func (uc *UserCreate) check() error {
 	}
 	if _, ok := uc.mutation.Account(); !ok {
 		return &ValidationError{Name: "account", err: errors.New(`ent: missing required field "User.account"`)}
+	}
+	if _, ok := uc.mutation.Disabled(); !ok {
+		return &ValidationError{Name: "disabled", err: errors.New(`ent: missing required field "User.disabled"`)}
 	}
 	return nil
 }
@@ -187,6 +208,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.Account(); ok {
 		_spec.SetField(user.FieldAccount, field.TypeString, value)
 		_node.Account = value
+	}
+	if value, ok := uc.mutation.Disabled(); ok {
+		_spec.SetField(user.FieldDisabled, field.TypeInt, value)
+		_node.Disabled = value
 	}
 	return _node, _spec
 }

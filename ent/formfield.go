@@ -20,22 +20,16 @@ type FormField struct {
 	FormID string `json:"form_id,omitempty"`
 	// 字段类型
 	FieldType string `json:"field_type,omitempty"`
-	// 字段标签
-	FieldLabel string `json:"field_label,omitempty"`
 	// 字段名称
-	FiledName string `json:"filed_name,omitempty"`
-	// 是否必填 1是0否
-	IsRequired int `json:"is_required,omitempty"`
+	FieldName string `json:"field_name,omitempty"`
 	// 排序字段
-	OrderIndex int `json:"order_index,omitempty"`
+	OrderIndex int `json:"order_index"`
 	// CreateAt holds the value of the "create_at" field.
 	CreateAt time.Time `json:"create_at,omitempty"`
 	// UpdateAt holds the value of the "update_at" field.
 	UpdateAt time.Time `json:"update_at,omitempty"`
-	// 存放选项
-	Options string `json:"options,omitempty"`
-	// Placeholder holds the value of the "placeholder" field.
-	Placeholder string `json:"placeholder,omitempty"`
+	// 是否禁用
+	Disabled int `json:"disabled"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -43,9 +37,9 @@ func (*FormField) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case formfield.FieldIsRequired, formfield.FieldOrderIndex:
+		case formfield.FieldOrderIndex, formfield.FieldDisabled:
 			values[i] = new(sql.NullInt64)
-		case formfield.FieldID, formfield.FieldFormID, formfield.FieldFieldType, formfield.FieldFieldLabel, formfield.FieldFiledName, formfield.FieldOptions, formfield.FieldPlaceholder:
+		case formfield.FieldID, formfield.FieldFormID, formfield.FieldFieldType, formfield.FieldFieldName:
 			values[i] = new(sql.NullString)
 		case formfield.FieldCreateAt, formfield.FieldUpdateAt:
 			values[i] = new(sql.NullTime)
@@ -82,23 +76,11 @@ func (ff *FormField) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				ff.FieldType = value.String
 			}
-		case formfield.FieldFieldLabel:
+		case formfield.FieldFieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field field_label", values[i])
+				return fmt.Errorf("unexpected type %T for field field_name", values[i])
 			} else if value.Valid {
-				ff.FieldLabel = value.String
-			}
-		case formfield.FieldFiledName:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field filed_name", values[i])
-			} else if value.Valid {
-				ff.FiledName = value.String
-			}
-		case formfield.FieldIsRequired:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field is_required", values[i])
-			} else if value.Valid {
-				ff.IsRequired = int(value.Int64)
+				ff.FieldName = value.String
 			}
 		case formfield.FieldOrderIndex:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -118,17 +100,11 @@ func (ff *FormField) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				ff.UpdateAt = value.Time
 			}
-		case formfield.FieldOptions:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field options", values[i])
+		case formfield.FieldDisabled:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field disabled", values[i])
 			} else if value.Valid {
-				ff.Options = value.String
-			}
-		case formfield.FieldPlaceholder:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field placeholder", values[i])
-			} else if value.Valid {
-				ff.Placeholder = value.String
+				ff.Disabled = int(value.Int64)
 			}
 		}
 	}
@@ -164,14 +140,8 @@ func (ff *FormField) String() string {
 	builder.WriteString("field_type=")
 	builder.WriteString(ff.FieldType)
 	builder.WriteString(", ")
-	builder.WriteString("field_label=")
-	builder.WriteString(ff.FieldLabel)
-	builder.WriteString(", ")
-	builder.WriteString("filed_name=")
-	builder.WriteString(ff.FiledName)
-	builder.WriteString(", ")
-	builder.WriteString("is_required=")
-	builder.WriteString(fmt.Sprintf("%v", ff.IsRequired))
+	builder.WriteString("field_name=")
+	builder.WriteString(ff.FieldName)
 	builder.WriteString(", ")
 	builder.WriteString("order_index=")
 	builder.WriteString(fmt.Sprintf("%v", ff.OrderIndex))
@@ -182,11 +152,8 @@ func (ff *FormField) String() string {
 	builder.WriteString("update_at=")
 	builder.WriteString(ff.UpdateAt.Format(time.ANSIC))
 	builder.WriteString(", ")
-	builder.WriteString("options=")
-	builder.WriteString(ff.Options)
-	builder.WriteString(", ")
-	builder.WriteString("placeholder=")
-	builder.WriteString(ff.Placeholder)
+	builder.WriteString("disabled=")
+	builder.WriteString(fmt.Sprintf("%v", ff.Disabled))
 	builder.WriteByte(')')
 	return builder.String()
 }

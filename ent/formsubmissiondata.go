@@ -24,6 +24,8 @@ type FormSubmissionData struct {
 	FieldValue string `json:"field_value,omitempty"`
 	// 提交时间
 	CreateAt time.Time `json:"create_at,omitempty"`
+	// IsDeleted holds the value of the "is_deleted" field.
+	IsDeleted int `json:"is_deleted"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -31,6 +33,8 @@ func (*FormSubmissionData) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case formsubmissiondata.FieldIsDeleted:
+			values[i] = new(sql.NullInt64)
 		case formsubmissiondata.FieldID, formsubmissiondata.FieldSubmissionID, formsubmissiondata.FieldFieldID, formsubmissiondata.FieldFieldValue:
 			values[i] = new(sql.NullString)
 		case formsubmissiondata.FieldCreateAt:
@@ -80,6 +84,12 @@ func (fsd *FormSubmissionData) assignValues(columns []string, values []any) erro
 			} else if value.Valid {
 				fsd.CreateAt = value.Time
 			}
+		case formsubmissiondata.FieldIsDeleted:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field is_deleted", values[i])
+			} else if value.Valid {
+				fsd.IsDeleted = int(value.Int64)
+			}
 		}
 	}
 	return nil
@@ -119,6 +129,9 @@ func (fsd *FormSubmissionData) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("create_at=")
 	builder.WriteString(fsd.CreateAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("is_deleted=")
+	builder.WriteString(fmt.Sprintf("%v", fsd.IsDeleted))
 	builder.WriteByte(')')
 	return builder.String()
 }

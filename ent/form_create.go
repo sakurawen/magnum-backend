@@ -58,6 +58,34 @@ func (fc *FormCreate) SetNillableUpdateAt(t *time.Time) *FormCreate {
 	return fc
 }
 
+// SetIsRelease sets the "is_release" field.
+func (fc *FormCreate) SetIsRelease(i int) *FormCreate {
+	fc.mutation.SetIsRelease(i)
+	return fc
+}
+
+// SetNillableIsRelease sets the "is_release" field if the given value is not nil.
+func (fc *FormCreate) SetNillableIsRelease(i *int) *FormCreate {
+	if i != nil {
+		fc.SetIsRelease(*i)
+	}
+	return fc
+}
+
+// SetDisabled sets the "disabled" field.
+func (fc *FormCreate) SetDisabled(i int) *FormCreate {
+	fc.mutation.SetDisabled(i)
+	return fc
+}
+
+// SetNillableDisabled sets the "disabled" field if the given value is not nil.
+func (fc *FormCreate) SetNillableDisabled(i *int) *FormCreate {
+	if i != nil {
+		fc.SetDisabled(*i)
+	}
+	return fc
+}
+
 // SetID sets the "id" field.
 func (fc *FormCreate) SetID(s string) *FormCreate {
 	fc.mutation.SetID(s)
@@ -107,6 +135,14 @@ func (fc *FormCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (fc *FormCreate) defaults() {
+	if _, ok := fc.mutation.IsRelease(); !ok {
+		v := form.DefaultIsRelease
+		fc.mutation.SetIsRelease(v)
+	}
+	if _, ok := fc.mutation.Disabled(); !ok {
+		v := form.DefaultDisabled
+		fc.mutation.SetDisabled(v)
+	}
 	if _, ok := fc.mutation.ID(); !ok {
 		v := form.DefaultID()
 		fc.mutation.SetID(v)
@@ -126,6 +162,12 @@ func (fc *FormCreate) check() error {
 	}
 	if _, ok := fc.mutation.CreateAt(); !ok {
 		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "Form.create_at"`)}
+	}
+	if _, ok := fc.mutation.IsRelease(); !ok {
+		return &ValidationError{Name: "is_release", err: errors.New(`ent: missing required field "Form.is_release"`)}
+	}
+	if _, ok := fc.mutation.Disabled(); !ok {
+		return &ValidationError{Name: "disabled", err: errors.New(`ent: missing required field "Form.disabled"`)}
 	}
 	return nil
 }
@@ -181,6 +223,14 @@ func (fc *FormCreate) createSpec() (*Form, *sqlgraph.CreateSpec) {
 	if value, ok := fc.mutation.UpdateAt(); ok {
 		_spec.SetField(form.FieldUpdateAt, field.TypeTime, value)
 		_node.UpdateAt = value
+	}
+	if value, ok := fc.mutation.IsRelease(); ok {
+		_spec.SetField(form.FieldIsRelease, field.TypeInt, value)
+		_node.IsRelease = value
+	}
+	if value, ok := fc.mutation.Disabled(); ok {
+		_spec.SetField(form.FieldDisabled, field.TypeInt, value)
+		_node.Disabled = value
 	}
 	return _node, _spec
 }

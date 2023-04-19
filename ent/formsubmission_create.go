@@ -32,9 +32,23 @@ func (fsc *FormSubmissionCreate) SetUserID(s string) *FormSubmissionCreate {
 	return fsc
 }
 
-// SetCreateID sets the "create_id" field.
-func (fsc *FormSubmissionCreate) SetCreateID(t time.Time) *FormSubmissionCreate {
-	fsc.mutation.SetCreateID(t)
+// SetCreateAt sets the "create_at" field.
+func (fsc *FormSubmissionCreate) SetCreateAt(t time.Time) *FormSubmissionCreate {
+	fsc.mutation.SetCreateAt(t)
+	return fsc
+}
+
+// SetIsDeleted sets the "is_deleted" field.
+func (fsc *FormSubmissionCreate) SetIsDeleted(i int) *FormSubmissionCreate {
+	fsc.mutation.SetIsDeleted(i)
+	return fsc
+}
+
+// SetNillableIsDeleted sets the "is_deleted" field if the given value is not nil.
+func (fsc *FormSubmissionCreate) SetNillableIsDeleted(i *int) *FormSubmissionCreate {
+	if i != nil {
+		fsc.SetIsDeleted(*i)
+	}
 	return fsc
 }
 
@@ -87,6 +101,10 @@ func (fsc *FormSubmissionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (fsc *FormSubmissionCreate) defaults() {
+	if _, ok := fsc.mutation.IsDeleted(); !ok {
+		v := formsubmission.DefaultIsDeleted
+		fsc.mutation.SetIsDeleted(v)
+	}
 	if _, ok := fsc.mutation.ID(); !ok {
 		v := formsubmission.DefaultID()
 		fsc.mutation.SetID(v)
@@ -101,8 +119,11 @@ func (fsc *FormSubmissionCreate) check() error {
 	if _, ok := fsc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "FormSubmission.user_id"`)}
 	}
-	if _, ok := fsc.mutation.CreateID(); !ok {
-		return &ValidationError{Name: "create_id", err: errors.New(`ent: missing required field "FormSubmission.create_id"`)}
+	if _, ok := fsc.mutation.CreateAt(); !ok {
+		return &ValidationError{Name: "create_at", err: errors.New(`ent: missing required field "FormSubmission.create_at"`)}
+	}
+	if _, ok := fsc.mutation.IsDeleted(); !ok {
+		return &ValidationError{Name: "is_deleted", err: errors.New(`ent: missing required field "FormSubmission.is_deleted"`)}
 	}
 	return nil
 }
@@ -147,9 +168,13 @@ func (fsc *FormSubmissionCreate) createSpec() (*FormSubmission, *sqlgraph.Create
 		_spec.SetField(formsubmission.FieldUserID, field.TypeString, value)
 		_node.UserID = value
 	}
-	if value, ok := fsc.mutation.CreateID(); ok {
-		_spec.SetField(formsubmission.FieldCreateID, field.TypeTime, value)
-		_node.CreateID = value
+	if value, ok := fsc.mutation.CreateAt(); ok {
+		_spec.SetField(formsubmission.FieldCreateAt, field.TypeTime, value)
+		_node.CreateAt = value
+	}
+	if value, ok := fsc.mutation.IsDeleted(); ok {
+		_spec.SetField(formsubmission.FieldIsDeleted, field.TypeInt, value)
+		_node.IsDeleted = value
 	}
 	return _node, _spec
 }

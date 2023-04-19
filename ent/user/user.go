@@ -17,6 +17,8 @@ const (
 	FieldRole = "role"
 	// FieldAccount holds the string denoting the account field in the database.
 	FieldAccount = "account"
+	// FieldDisabled holds the string denoting the disabled field in the database.
+	FieldDisabled = "disabled"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 )
@@ -29,6 +31,7 @@ var Columns = []string{
 	FieldPhone,
 	FieldRole,
 	FieldAccount,
+	FieldDisabled,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -44,6 +47,8 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultRole holds the default value on creation for the "role" field.
 	DefaultRole string
+	// DefaultDisabled holds the default value on creation for the "disabled" field.
+	DefaultDisabled int
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() string
 )

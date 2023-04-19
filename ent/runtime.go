@@ -5,6 +5,7 @@ package ent
 import (
 	"magnum/ent/form"
 	"magnum/ent/formfield"
+	"magnum/ent/formfieldconfig"
 	"magnum/ent/formsubmission"
 	"magnum/ent/formsubmissiondata"
 	"magnum/ent/schema"
@@ -17,28 +18,54 @@ import (
 func init() {
 	formFields := schema.Form{}.Fields()
 	_ = formFields
+	// formDescIsRelease is the schema descriptor for is_release field.
+	formDescIsRelease := formFields[6].Descriptor()
+	// form.DefaultIsRelease holds the default value on creation for the is_release field.
+	form.DefaultIsRelease = formDescIsRelease.Default.(int)
+	// formDescDisabled is the schema descriptor for disabled field.
+	formDescDisabled := formFields[7].Descriptor()
+	// form.DefaultDisabled holds the default value on creation for the disabled field.
+	form.DefaultDisabled = formDescDisabled.Default.(int)
 	// formDescID is the schema descriptor for id field.
 	formDescID := formFields[0].Descriptor()
 	// form.DefaultID holds the default value on creation for the id field.
 	form.DefaultID = formDescID.Default.(func() string)
 	formfieldFields := schema.FormField{}.Fields()
 	_ = formfieldFields
-	// formfieldDescIsRequired is the schema descriptor for is_required field.
-	formfieldDescIsRequired := formfieldFields[5].Descriptor()
-	// formfield.DefaultIsRequired holds the default value on creation for the is_required field.
-	formfield.DefaultIsRequired = formfieldDescIsRequired.Default.(int)
+	// formfieldDescDisabled is the schema descriptor for disabled field.
+	formfieldDescDisabled := formfieldFields[7].Descriptor()
+	// formfield.DefaultDisabled holds the default value on creation for the disabled field.
+	formfield.DefaultDisabled = formfieldDescDisabled.Default.(int)
 	// formfieldDescID is the schema descriptor for id field.
 	formfieldDescID := formfieldFields[0].Descriptor()
 	// formfield.DefaultID holds the default value on creation for the id field.
 	formfield.DefaultID = formfieldDescID.Default.(func() string)
+	formfieldconfigFields := schema.FormFieldConfig{}.Fields()
+	_ = formfieldconfigFields
+	// formfieldconfigDescDisabled is the schema descriptor for disabled field.
+	formfieldconfigDescDisabled := formfieldconfigFields[9].Descriptor()
+	// formfieldconfig.DefaultDisabled holds the default value on creation for the disabled field.
+	formfieldconfig.DefaultDisabled = formfieldconfigDescDisabled.Default.(int)
+	// formfieldconfigDescID is the schema descriptor for id field.
+	formfieldconfigDescID := formfieldconfigFields[0].Descriptor()
+	// formfieldconfig.DefaultID holds the default value on creation for the id field.
+	formfieldconfig.DefaultID = formfieldconfigDescID.Default.(func() string)
 	formsubmissionFields := schema.FormSubmission{}.Fields()
 	_ = formsubmissionFields
+	// formsubmissionDescIsDeleted is the schema descriptor for is_deleted field.
+	formsubmissionDescIsDeleted := formsubmissionFields[4].Descriptor()
+	// formsubmission.DefaultIsDeleted holds the default value on creation for the is_deleted field.
+	formsubmission.DefaultIsDeleted = formsubmissionDescIsDeleted.Default.(int)
 	// formsubmissionDescID is the schema descriptor for id field.
 	formsubmissionDescID := formsubmissionFields[0].Descriptor()
 	// formsubmission.DefaultID holds the default value on creation for the id field.
 	formsubmission.DefaultID = formsubmissionDescID.Default.(func() string)
 	formsubmissiondataFields := schema.FormSubmissionData{}.Fields()
 	_ = formsubmissiondataFields
+	// formsubmissiondataDescIsDeleted is the schema descriptor for is_deleted field.
+	formsubmissiondataDescIsDeleted := formsubmissiondataFields[5].Descriptor()
+	// formsubmissiondata.DefaultIsDeleted holds the default value on creation for the is_deleted field.
+	formsubmissiondata.DefaultIsDeleted = formsubmissiondataDescIsDeleted.Default.(int)
 	// formsubmissiondataDescID is the schema descriptor for id field.
 	formsubmissiondataDescID := formsubmissiondataFields[0].Descriptor()
 	// formsubmissiondata.DefaultID holds the default value on creation for the id field.
@@ -49,6 +76,10 @@ func init() {
 	userDescRole := userFields[4].Descriptor()
 	// user.DefaultRole holds the default value on creation for the role field.
 	user.DefaultRole = userDescRole.Default.(string)
+	// userDescDisabled is the schema descriptor for disabled field.
+	userDescDisabled := userFields[6].Descriptor()
+	// user.DefaultDisabled holds the default value on creation for the disabled field.
+	user.DefaultDisabled = userDescDisabled.Default.(int)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userFields[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.
